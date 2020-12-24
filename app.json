@@ -1,0 +1,22 @@
+{
+  "name": "csocket-application",
+  "description": "Socket.io / Node.js compiled using CSocket",
+  "website": "https://hyperpad.com",
+  "repository": "https://github.com/rxcodes/csocket-template",
+  "logo": "https://node-js-sample.herokuapp.com/node.svg",
+  "success_url": "/",
+  "keywords": [
+    "node",
+    "express",
+    "socket.io",
+    "realtime",
+    "websocket"
+  ],
+  "scripts": {
+  },
+  "addons": [
+  ],
+  "env": {
+    "BUILDPACK_URL": "https://github.com/heroku/heroku-buildpack-nodejs"
+  }
+}
