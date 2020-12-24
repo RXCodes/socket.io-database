@@ -7,9 +7,25 @@ app.get('/', function(req, res){
   res.sendFile(__dirname + '/index.html');
 });
 
+var rooms = {};
+
 io.on('connection', function(socket) {
+  socket.joined = false;
   
+  // fetch rooms
+  socket.on('fetch', function(input, callback) {
+    callback(rooms);
+  });
   
+  // create a room with name
+  socket.on('create', function(name, callback) {
+    if (socket.joined == false) {
+      socket.join(socket.id);
+      callback("success");
+    } else {
+      callback("error");
+    }
+  });
   
 });
   
