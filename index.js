@@ -255,6 +255,15 @@ io.on('connection', function(socket) {
       callback("error");
     }
   });
+  
+  // custom in-game events
+  socket.on('event', function(input, callback) {
+    try {
+      let packet = JSON.parse(input);
+      packet.id = socket.id;
+      io.in(socket.room).emit("event", packet);
+    } catch(e) {};
+  });
             
 });
   
