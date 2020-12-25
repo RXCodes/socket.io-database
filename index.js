@@ -10,10 +10,26 @@ app.get('/', function(req, res){
 // initialize variables and functions
 var rooms = {};
 
+// function to generate code
 var generateCode = function() {
-}
-var endGame = function(room,reason) {
-}
+  var code = "";
+  var i;
+  for (i = 0; i < 8; i++) {
+    code = code + String.fromCharCode(65 + (Math.random() * 25));
+  };
+  return code;
+};
+
+// function to end a game in a room
+var endGame = function(room, reason, victory) {
+  let summaryPacket = {
+    "reason": reason,
+    "victory": victory,
+    "impostor": rooms[room].impostor
+  };
+  io.in(room).emit("end game", summaryPacket);
+  rooms[room].state = "Ready";
+};
 
 // socket connection handler
 io.on('connection', function(socket) {
@@ -60,13 +76,13 @@ io.on('connection', function(socket) {
       
       // if Impostor left the game, end the game
       if (socket.role == "Impostor") {
-        io.in(socket.room).emit("end game", "Impostor Left");
+        endGame(socket.room, "Impostor left the game","Crewmate");
 
       } else {
 
         // end game if there are only 2 players
         if (rooms[socket.room].players <= 2) {
-          io.in(socket.room).emit("end game", "Impostor Left");
+          endGame(socket.room, "Crewmate left the game","Impostor");
         }
       }
       
@@ -88,6 +104,7 @@ io.on('connection', function(socket) {
       roomData.name = name;
       roomData.players = 1;
       roomData.owner = socket.name;
+      roomData.state = "Ready";
       roomData.code = generateCode();
       
       // set room data
@@ -118,7 +135,6 @@ io.on('connection', function(socket) {
       callback("Room does not exist.");
       
     }
-    
   });
     
 });
