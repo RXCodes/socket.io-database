@@ -77,14 +77,19 @@ io.on('connection', function(socket) {
       
       // if Impostor left the game, end the game
       if (socket.role == "Impostor" && rooms[socket.room].state == "In-Game") {
-        endGame(socket.room, "Impostor left the game","Crewmate");
+        endGame(socket.room, "Impostor left the game", "Crewmate");
 
       } else {
+        
+        // decrement crewmate count if a crewmate leaves
+        if (socket.role == "Crewmate" && rooms[socket.room].state == "In-Game") {
+          roomData[socket.room].crewmates--;
+        }
 
-        // end game if there are only 2 players
-        if (rooms[socket.room].players <= 2) {
+        // end game if there is only one crewmate left
+        if (roomData[socket.room].crewmates == 1) {
           if (rooms[socket.room].state == "In-Game") {
-            endGame(socket.room, "Crewmate left the game","Impostor");
+            endGame(socket.room, "Crewmate left the game", "Impostor");
           } else {
             io.in(socket.room).emit("cancel countdown", "cancel");
             clearTimeout(roomData[socket.room].timer);
@@ -95,7 +100,7 @@ io.on('connection', function(socket) {
       // end game if all tasks were finished by other players
       rooms[socket.room].totalTasks -= 6;
       if (rooms[socket.room].tasksFinished >= rooms[socket.room].totalTasks) {
-        endGame(socket.room, "All tasks were finished","Crewmate");
+        endGame(socket.room, "All tasks were finished", "Crewmate");
       }
       
       // remove player from list
@@ -213,13 +218,17 @@ io.on('connection', function(socket) {
           clearTimeout(roomData[socket.room].timer);
           roomData[socket.room].list.sort(() => Math.random() - 0.5);
           for (let i; i < roomData[socket.room].list.length; i++) {
+            io.to(roomData[socket.room].list[i]).alive = true;
             io.in(socket.room).emit("start", "start");
             room[socket.room].totalTasks = (room[socket.room].players - 1) * 6;
+            room[socket.room].crewmates = room[socket.room].players - 1;
             room[socket.room].tasksFinished = 0;
             if (i == 0) {
               io.to(roomData[socket.room].list[i]).emit("role","Impostor");
+              io.to(roomData[socket.room].list[i]).role = "Impostor";
             } else {
               io.to(roomData[socket.room].list[i]).emit("role","Crewmate");
+              io.to(roomData[socket.room].list[i]).role = "Crewmate";
             }
           }
         }
@@ -279,9 +288,47 @@ io.on('connection', function(socket) {
       if (rooms[socket.room].state !== "Ready") {
         rooms[socket.room].tasksFinished++;
         io.in(socket.room).emit("finish task", rooms[socket.room].tasksFinished);
+        if (rooms[socket.room].totalTasks == rooms[socket.room].tasksFinished) {
+          endGame(socket.room, "All tasks were completed","Crewmate");
+        }
+        callback("success");
       }
     }
   });
+  
+  // impostor kill
+  socket.on('kill', function(input, callback) {
+    if (socket.joined == true) {
+      if (rooms[socket.room].state !== "Ready") {
+        
+        // check if player exists in the room
+        if (input in roomData[socket.room].list) {
+          
+          // kill player
+          io.to(input).alive = false;
+          let killPacket = {
+            "target": input, // ID of player who was killed
+            "killer": socket.id // ID of the killer
+          };
+          io.in(socket.room).emit("kill", killPacket);
+          roomData[socket.room].crewmates--;
+          callback("success");
+          
+          // end game when there is only one crewmate left
+          if (roomData[socket.room].crewmates == 1) {
+            endGame(socket.room, "Impostor killed one of the last standing crewmates", "Impostor");
+          }
+          
+        }
+      }
+    }
+  });
+  
+  // report a dead body and start a meeting
+  socket.on('report body', function(input, callback) {
+    
+  });
+  
 });
   
 http.listen(port, function() {
