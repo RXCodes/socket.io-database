@@ -299,7 +299,7 @@ io.on('connection', function(socket) {
   // impostor kill
   socket.on('kill', function(input, callback) {
     if (socket.joined == true) {
-      if (rooms[socket.room].state !== "Ready") {
+      if (rooms[socket.room].state !== "Ready" && socket.role == "Impostor") {
         
         // check if player exists in the room
         if (input in roomData[socket.room].list) {
@@ -326,7 +326,23 @@ io.on('connection', function(socket) {
   
   // report a dead body and start a meeting
   socket.on('report body', function(input, callback) {
-    
+    if (socket.joined == true) {
+      if (rooms[socket.room].state !== "Ready" && socket.alive == true) {
+        
+        // check if player exists in the room
+        if (input in roomData[socket.room].list) {
+          
+          // report dead body
+          let reportPacket = {
+            "target": input, // ID of player whose body was reported
+            "killer": socket.id // ID of the reporter
+          };
+          io.in(socket.room).emit("report body", reportPacket);
+          callback("success");
+          
+        }
+      }
+    }
   });
   
 });
