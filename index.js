@@ -8,7 +8,7 @@ app.get('/', function(req, res){
 });
 
 // initialize variables
-var generate_code = require('./functions');
+var functions = require('./functions');
 var rooms = {};
 
 // socket connection handler
@@ -60,6 +60,7 @@ io.on('connection', function(socket) {
       let roomData = {};
       roomData.name = name;
       roomData.players = 1;
+      roomData.code = functions.generate_code();
       
       // set room data
       rooms[socket.id] = roomData;
