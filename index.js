@@ -10,6 +10,7 @@ app.get('/', function(req, res){
 var rooms = {};
 
 io.on('connection', function(socket) {
+  // intialize socket variables
   socket.joined = false;
   socket.owner = false;
   
@@ -18,6 +19,28 @@ io.on('connection', function(socket) {
     callback(rooms);
   });
   
+  // fetch socket id
+  socket.on('id', function(input, callback) {
+    callback(socket.id);
+  });
+  
+  // handle disconnection
+  socket.on('disconnect', function(reason) {
+    if (socket.joined == false) {
+      
+      // let other clients know player disconnected
+      io.in(socket.room).emit("offline", socket.id);
+      
+      // decrease player count
+      rooms[socket.room].players--;
+      
+      // destroy room when there are no players in that room
+      if (rooms[socket.room].players <= 0) {
+        delete rooms[socket.room];
+      }
+    }
+  });
+    
   // create a room with name
   socket.on('create', function(name, callback) {
     if (socket.joined == false) {
