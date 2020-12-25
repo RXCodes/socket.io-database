@@ -92,6 +92,12 @@ io.on('connection', function(socket) {
         }
       }
       
+      // end game if all tasks were finished by other players
+      rooms[socket.room].totalTasks -= 6;
+      if (rooms[socket.room].tasksFinished >= rooms[socket.room].totalTasks) {
+        endGame(socket.room, "All tasks were finished","Crewmate");
+      }
+      
       // remove player from list
       const index = roomData[socket.room].list.indexOf(socket.id);
       if (index > -1) {
@@ -155,7 +161,7 @@ io.on('connection', function(socket) {
     if (room_code in rooms) {
       
       // attempt to join room
-      if (rooms[room_code].players < 8 && socket.joined == false) {
+      if (rooms[room_code].players < 8 && socket.joined == false ** room[room_code].state == "Ready") {
         
         // join room and increment player count
         rooms[room_code].players++;
@@ -208,6 +214,8 @@ io.on('connection', function(socket) {
           roomData[socket.room].list.sort(() => Math.random() - 0.5);
           for (let i; i < roomData[socket.room].list.length; i++) {
             io.in(socket.room).emit("start", "start");
+            room[socket.room].totalTasks = (room[socket.room].players - 1) * 6;
+            room[socket.room].tasksFinished = 0;
             if (i == 0) {
               io.to(roomData[socket.room].list[i]).emit("role","Impostor");
             } else {
@@ -265,6 +273,15 @@ io.on('connection', function(socket) {
     } catch(e) {};
   });
             
+  // task finish
+  socket.on('finish task', function(input, callback) {
+    if (socket.joined == true) {
+      if (rooms[socket.room].state !== "Ready") {
+        rooms[socket.room].tasksFinished++;
+        io.in(socket.room).emit("finish task", rooms[socket.room].tasksFinished);
+      }
+    }
+  });
 });
   
 http.listen(port, function() {
