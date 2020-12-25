@@ -7,9 +7,13 @@ app.get('/', function(req, res){
   res.sendFile(__dirname + '/index.html');
 });
 
-// initialize variables
-var functions = require('./functions');
+// initialize variables and functions
 var rooms = {};
+
+var generateCode = function() {
+}
+var endGame = function(room,reason) {
+}
 
 // socket connection handler
 io.on('connection', function(socket) {
@@ -51,8 +55,20 @@ io.on('connection', function(socket) {
       };
       io.in(socket.room).emit("offline", offlinePacket);
       
-      // decrease player count
+      // decrement player count
       rooms[socket.room].players--;
+      
+      // if Impostor left the game, end the game
+      if (socket.role == "Impostor") {
+        io.in(socket.room).emit("end game", "Impostor Left");
+
+      } else {
+
+        // end game if there are only 2 players
+        if (rooms[socket.room].players <= 2) {
+          io.in(socket.room).emit("end game", "Impostor Left");
+        }
+      }
       
       // destroy room when there are no players in that room
       if (rooms[socket.room].players <= 0) {
@@ -72,9 +88,10 @@ io.on('connection', function(socket) {
       roomData.name = name;
       roomData.players = 1;
       roomData.owner = socket.name;
+      roomData.code = generateCode();
       
       // set room data
-      rooms[functions.generate_code()] = roomData;
+      rooms[roomData.code] = roomData;
         
       // inform player that room was successfully created
       callback("success");
