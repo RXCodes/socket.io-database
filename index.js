@@ -96,7 +96,6 @@ io.on('connection', function(socket) {
   // create a room with name when called
   socket.on('create', function(name, callback) {
     if (socket.joined == false) {
-      socket.join(socket.id);
       socket.room = socket.id;
       
       // initialize room data
@@ -108,6 +107,7 @@ io.on('connection', function(socket) {
       roomData.code = generateCode();
       
       // set room data
+      socket.join(roomData.code);
       rooms[roomData.code] = roomData;
         
       // inform player that room was successfully created
@@ -127,7 +127,19 @@ io.on('connection', function(socket) {
     if (room_code in rooms) {
       
       // attempt to join room
-      
+      if (rooms[room_code].players < 8 && socket.joined == false) {
+        
+        // join room and increment player count
+        rooms[room_code].players++;
+        socket.joined = true;
+        socket.join(room_code);
+        callback("Success");
+        
+      } else {
+     
+        // return an error if room is full
+        callback("Room is full.");
+      }
       
     } else {
 
