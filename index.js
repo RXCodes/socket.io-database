@@ -85,6 +85,9 @@ var startMeeting = function(room, type, reporter, metadata) {
           highestVoteCount = voteCounts[key];
           topCandidate = key;
         }
+        if (voteCounts[key] == highestVoteCount) {
+          topCandidate = "tie";
+        }
       });
       
       let role = "none";
@@ -448,6 +451,11 @@ io.on('connection', function(socket) {
         
         // set vote
         roomData[socket.room].voteData[socket.id] = input;
+        let votePacket = {
+          "voter": socket.id, // id of player who voted
+          "vote": input // what the player voted for (Skip or Player ID)
+        };
+        io.in(socket.room).emit("vote", votePacket);
         callback("Success");
         
       }
