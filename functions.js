@@ -7,4 +7,6 @@ exports.generate_code = function() {
   for (i = 0; i < 8; i++) {
     code = code + String.fromCharCode(65 + (Math.random() * 25));
   }
+  
+  return code;
 }
