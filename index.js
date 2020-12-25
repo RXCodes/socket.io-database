@@ -400,7 +400,7 @@ io.on('connection', function(socket) {
         roomData[socket.room].votes++;
         
         // set vote
-        roomData[socket.room].voteData[socket.id].color = input;
+        roomData[socket.room].voteData[socket.id] = input;
         callback("Success");
         
       }
