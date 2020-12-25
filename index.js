@@ -103,7 +103,9 @@ io.on('connection', function(socket) {
       if (socket.owner == true && rooms[socket.room].players > 0) {
         roomData[socket.room].list.sort(() => Math.random() - 0.5);
         let newOwner = roomData[socket.room].list[0];
-        io.of('/').sockets.get(newOwner);
+        io.to(newOwner).owner = true;
+        room[socket.room].owner = io.to(newOwner).name;
+        io.in(socket.room).emit("owner", newOwner);
       }
     }
   });
