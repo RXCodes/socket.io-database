@@ -175,8 +175,27 @@ io.on('connection', function(socket) {
     if (socket.owner == true && rooms[socket.room].state == "Ready") {
       
       // initiate game and start countdown
+      io.in(socket.room).emit("start", "countdown");
       rooms[socket.room].state = "In-Game";
-      roomData[socket.room].countdown = 15;
+      let countdown = 16;
+      roomData.time = setInterval(() => {
+        countdown--;
+        io.in(socket.room).emit("countdown", countdown);
+        
+        // when countdown ends, give each player a role and start game
+        if (countdown == 0) {
+          clearTimeout(roomData.time);
+          roomData[socket.room].list.sort(() => Math.random() - 0.5);
+          for (let i; i < roomData[socket.room].list.length, i++) {
+            io.in(socket.room).emit("start", "start");
+            if (i == 0) {
+              io.to(roomData[socket.room].list[i]).emit("role","Impostor");
+            } else {
+              io.to(roomData[socket.room].list[i]).emit("role","Crewmate");
+            }
+          }
+        }
+      } 1000 );
       
     }
   }
