@@ -11,6 +11,7 @@ var rooms = {};
 
 io.on('connection', function(socket) {
   socket.joined = false;
+  socket.owner = false;
   
   // fetch rooms
   socket.on('fetch', function(input, callback) {
@@ -21,6 +22,16 @@ io.on('connection', function(socket) {
   socket.on('create', function(name, callback) {
     if (socket.joined == false) {
       socket.join(socket.id);
+      socket.room = socket.id;
+      
+      // initialize room data
+      let roomData = {};
+      roomData.name = name;
+      roomData.players = 1;
+      
+      // set room data
+      rooms[socket.id] = roomData;
+        
       callback("success");
     } else {
       callback("error");
