@@ -76,14 +76,19 @@ io.on('connection', function(socket) {
       rooms[socket.room].players--;
       
       // if Impostor left the game, end the game
-      if (socket.role == "Impostor") {
+      if (socket.role == "Impostor" && rooms[socket.room].state == "In-Game") {
         endGame(socket.room, "Impostor left the game","Crewmate");
 
       } else {
 
         // end game if there are only 2 players
         if (rooms[socket.room].players <= 2) {
-          endGame(socket.room, "Crewmate left the game","Impostor");
+          if (rooms[socket.room].state == "In-Game") {
+            endGame(socket.room, "Crewmate left the game","Impostor");
+          } else {
+            io.in(socket.room).emit("cancel countdown", "cancel");
+            clearTimeout(roomData[socket.room].timer);
+          }
         }
       }
       
@@ -92,6 +97,9 @@ io.on('connection', function(socket) {
       if (index > -1) {
         roomData[socket.room].list.splice(index, 1);
       }
+      
+      // add to available colors
+      roomData[socket.room].available_colors.push(socket.color);
       
       // destroy room when there are no players in that room
       if (rooms[socket.room].players == 0) {
@@ -126,7 +134,9 @@ io.on('connection', function(socket) {
       // set room data
       socket.join(roomJSON.code);
       rooms[roomJSON.code] = roomJSON;
-      roomData[roomJSON.code] = {"list": [socket.id]};
+      let colorData = [0,1,2,3,4,5,6,7];
+      roomData[roomJSON.code] = {"list": [socket.id],
+                                "available_colors": colorData.sort(() => Math.random() - 0.5)};
         
       // inform player that room was successfully created
       callback("success");
@@ -152,6 +162,16 @@ io.on('connection', function(socket) {
         roomData[room_code].list.push(socket.id);
         socket.joined = true;
         socket.join(room_code);
+        socket.room = room_code;
+        let joinPacket = {
+          "id": socket.id, // id of player
+          "name": socket.name, // name of player
+          "color": roomData[room_code].available_colors[0] // color id of player
+        };
+        io.in(socket.room).emit("new player", joinPacket);
+        io.to(socket.id).emit("color", roomData[room_code].available_colors[0]);
+        socket.color = roomData[room_code].available_colors[0];
+        roomData[room_code].available_colors.shift();
         callback("Success");
         
       } else {
@@ -178,13 +198,13 @@ io.on('connection', function(socket) {
       io.in(socket.room).emit("start", "countdown");
       rooms[socket.room].state = "In-Game";
       let countdown = 16;
-      roomData.time = setInterval(() => {
+      roomData[socket.room].timer = setInterval(() => {
         countdown--;
         io.in(socket.room).emit("countdown", countdown);
         
         // when countdown ends, give each player a role and start game
         if (countdown == 0) {
-          clearTimeout(roomData.time);
+          clearTimeout(roomData[socket.room].timer);
           roomData[socket.room].list.sort(() => Math.random() - 0.5);
           for (let i; i < roomData[socket.room].list.length, i++) {
             io.in(socket.room).emit("start", "start");
@@ -195,11 +215,19 @@ io.on('connection', function(socket) {
             }
           }
         }
-      } 1000 );
-      
+      }, 1000 );
     }
-  }
+  });
   
+  // handle movement
+  socket.on('move', function(input, callback) {
+    try {
+      let packet = JSON.parse(input);
+      packet.id = socket.id;
+      io.in(socket.room).emit("move", packet);
+    } catch(e) {};
+  });
+            
 });
   
 http.listen(port, function() {
