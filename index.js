@@ -29,7 +29,12 @@ io.on('connection', function(socket) {
     if (socket.joined == false) {
       
       // let other clients know player disconnected
-      io.in(socket.room).emit("offline", socket.id);
+      let offlinePacket = {
+        "reason": reason, // the reason why the player was disconnected
+        "id": socket.id, // the id of the player who disconnected
+        "role": socket.role // the role of the player (Imposter or Crewmate)
+      };
+      io.in(socket.room).emit("offline", offlinePacket);
       
       // decrease player count
       rooms[socket.room].players--;
@@ -41,7 +46,7 @@ io.on('connection', function(socket) {
     }
   });
     
-  // create a room with name
+  // create a room with name when called
   socket.on('create', function(name, callback) {
     if (socket.joined == false) {
       socket.join(socket.id);
