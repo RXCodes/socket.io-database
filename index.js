@@ -206,7 +206,7 @@ io.on('connection', function(socket) {
         if (countdown == 0) {
           clearTimeout(roomData[socket.room].timer);
           roomData[socket.room].list.sort(() => Math.random() - 0.5);
-          for (let i; i < roomData[socket.room].list.length, i++) {
+          for (let i; i < roomData[socket.room].list.length; i++) {
             io.in(socket.room).emit("start", "start");
             if (i == 0) {
               io.to(roomData[socket.room].list[i]).emit("role","Impostor");
