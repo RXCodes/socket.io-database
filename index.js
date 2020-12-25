@@ -7,9 +7,13 @@ app.get('/', function(req, res){
   res.sendFile(__dirname + '/index.html');
 });
 
+// initialize variables
+var generate_code = require('./functions');
 var rooms = {};
 
+// socket connection handler
 io.on('connection', function(socket) {
+  
   // intialize socket variables
   socket.joined = false;
   socket.owner = false;
@@ -60,8 +64,12 @@ io.on('connection', function(socket) {
       // set room data
       rooms[socket.id] = roomData;
         
+      // inform player that room was successfully created
       callback("success");
+      
     } else {
+      
+      // inform player if room wasn't successfully created
       callback("error");
     }
   });
