@@ -45,22 +45,69 @@ var startMeeting = function(room, type, reporter, metadata) {
   
   // start a timer
   let time = 110;
+  let endMeet = false;
   roomData[room].timer = setInterval(() => {
     time--;
     io.in(room).emit("meet time", time);
     
-    // meeting ends
+    // meeting ends by time
     if (time == 0) {
-      clearTimeout(roomData[room].timer);
-      io.in(room).emit("meet end", roomData[room].voteData);
+      endMeet = true;
+      
     } else {
       
-      // check if everyone voted
+      // meeting ends when everyone has voted
       if (roomData[room].votes == rooms[room].players) {
-        clearTimeout(roomData[room].timer);
-        io.in(room).emit("meet end", roomData[room].voteData);
-      }
+        endMeet = true;
+      }  
+    }
+    
+    // when meeting ends, stop timer and send all clients data
+    if (endMeet) {
+      clearTimeout(roomData[room].timer);
+      io.in(room).emit("meet end", roomData[room].voteData);
       
+      // count votes
+      let voteCounts = {};
+      Object.keys(roomData[room].voteData).forEach(function(key) {
+        try {
+        voteCounts[roomData[room].voteData[key]]++;
+        } catch(e) {
+          voteCounts[roomData[room].voteData[key]] = 1;
+        }
+      });
+      
+      // get most voted
+      let highestVoteCount = 0;
+      let topCandidate = "none";
+      Object.keys(voteCounts).forEach(function(key) {
+        if (voteCounts[key] > highestVoteCount) {
+          highestVoteCount = voteCounts[key];
+          topCandidate = key;
+        }
+      });
+      
+      let role = "none";
+      try {
+        role = io.to(topCandidate).role;
+      } catch(e) {}
+      
+      // announce top candidate
+      let summaryPacket = {
+        "topVote": topCandidate,
+        "role": role;
+      };
+      io.in(room).emit("vote summary", summaryPacket);
+      
+      // remove candidate from game if possible
+      try {
+        io.to(topCandidate).alive = false;
+      } catch(e) {}
+      
+      // end game if Impostor was chosen
+      if (role == "Impostor") {
+        endGame(room, "Impostor was kicked from the ship", "Crewmate");
+      }
     }
     
   },
