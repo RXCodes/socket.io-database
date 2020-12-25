@@ -9,6 +9,7 @@ app.get('/', function(req, res){
 
 // initialize variables and functions
 var rooms = {};
+var roomData = {};
 
 // function to generate code
 var generateCode = function() {
@@ -25,7 +26,7 @@ var endGame = function(room, reason, victory) {
   let summaryPacket = {
     "reason": reason,
     "victory": victory,
-    "impostor": rooms[room].impostor
+    "impostor": roomData[room].impostor
   };
   io.in(room).emit("end game", summaryPacket);
   rooms[room].state = "Ready";
@@ -86,9 +87,16 @@ io.on('connection', function(socket) {
         }
       }
       
+      // remove player from list
+      const index = roomData[socket.room].list.indexOf(socket.id);
+      if (index > -1) {
+        roomData[socket.room].list.splice(index, 1);
+      }
+      
       // destroy room when there are no players in that room
       if (rooms[socket.room].players == 0) {
         delete rooms[socket.room];
+        delete roomData[socket.room];
       }
       
       // grant a random person ownership if owner leaves
@@ -104,16 +112,17 @@ io.on('connection', function(socket) {
       socket.room = socket.id;
       
       // initialize room data
-      let roomData = {};
-      roomData.name = name;
-      roomData.players = 1;
-      roomData.owner = socket.name;
-      roomData.state = "Ready";
-      roomData.code = generateCode();
+      let roomJSON = {};
+      roomJSON.name = name;
+      roomJSON.players = 1;
+      roomJSON.owner = socket.name;
+      roomJSON.state = "Ready";
+      roomJSON.code = generateCode();
       
       // set room data
-      socket.join(roomData.code);
-      rooms[roomData.code] = roomData;
+      socket.join(roomJSON.code);
+      rooms[roomJSON.code] = roomJSON;
+      roomData[roomJSON.code] = {"list": [socket.id]};
         
       // inform player that room was successfully created
       callback("success");
@@ -136,6 +145,7 @@ io.on('connection', function(socket) {
         
         // join room and increment player count
         rooms[room_code].players++;
+        roomData[room_code].list.push(socket.id);
         socket.joined = true;
         socket.join(room_code);
         callback("Success");
