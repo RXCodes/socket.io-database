@@ -87,8 +87,13 @@ io.on('connection', function(socket) {
       }
       
       // destroy room when there are no players in that room
-      if (rooms[socket.room].players <= 0) {
+      if (rooms[socket.room].players == 0) {
         delete rooms[socket.room];
+      }
+      
+      // grant a random person ownership if owner leaves
+      if (socket.owner == true && rooms[socket.room].players > 0) {
+        
       }
     }
   });
