@@ -168,6 +168,19 @@ io.on('connection', function(socket) {
     }
   });
     
+  // start game handler
+  socket.on('start', function(room_code, callback) {
+    
+    // check conditions
+    if (socket.owner == true && rooms[socket.room].state == "Ready") {
+      
+      // initiate game and start countdown
+      rooms[socket.room].state = "In-Game";
+      roomData[socket.room].countdown = 15;
+      
+    }
+  }
+  
 });
   
 http.listen(port, function() {
