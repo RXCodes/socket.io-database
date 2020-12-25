@@ -32,6 +32,42 @@ var endGame = function(room, reason, victory) {
   rooms[room].state = "Ready";
 };
 
+// function to initiate meeting
+var startMeeting = function(room, type, reporter, metadata) {
+  clearTimeout(roomData[room].timer);
+  let meetingPacket = {
+    "type": type, // type of meeting (Emergency or Report)
+    "reporter": reporter // player who initiated meeting
+  }
+  roomData[room].votes = 0;
+  roomData[room].voteData = {};
+  io.in(room).emit("meet", meetingPacket);
+  
+  // start a timer
+  let time = 110;
+  roomData[room].timer = setInterval(() => {
+    time--;
+    io.in(room).emit("meet time", time);
+    
+    // meeting ends
+    if (time == 0) {
+      clearTimeout(roomData[room].timer);
+      io.in(room).emit("meet end", roomData[room].voteData);
+    } else {
+      
+      // check if everyone voted
+      if (roomData[room].votes == rooms[room].players) {
+        clearTimeout(roomData[room].timer);
+        io.in(room).emit("meet end", roomData[room].voteData);
+      }
+      
+    }
+    
+  },
+  1000
+  )
+};
+
 // socket connection handler
 io.on('connection', function(socket) {
   
@@ -203,7 +239,7 @@ io.on('connection', function(socket) {
   socket.on('start', function(room_code, callback) {
     
     // check conditions
-    if (socket.owner == true && rooms[socket.room].state == "Ready") {
+    if (socket.owner == true && rooms[socket.room].state == "Ready" && rooms[socket.room].players > 2) {
       
       // initiate game and start countdown
       io.in(socket.room).emit("start", "countdown");
@@ -338,12 +374,38 @@ io.on('connection', function(socket) {
             "killer": socket.id // ID of the reporter
           };
           io.in(socket.room).emit("report body", reportPacket);
+          startMeeting(socket.room, "Report", socket.id);
           callback("success");
           
         }
       }
     }
   });
+  
+  // emergency meeting
+  socket.on('emergency meeting', function(input, callback) {
+    if (socket.joined == true) {
+      if (rooms[socket.room].state !== "Ready" && socket.alive == true) {
+        startMeeting(socket.room, "Emergency", socket.id);
+      }
+    }
+  });
+  
+  // handle votes
+  socket.on('vote', function(input, callback) {
+    if (socket.joined == true) {
+      if (rooms[socket.room].state !== "Ready" && socket.alive == true) {
+        
+        // increment vote
+        roomData[socket.room].votes++;
+        
+        // set vote
+        roomData[socket.room].voteData[socket.id].color = input;
+        callback("Success");
+        
+      }
+    }
+  }
   
 });
   
