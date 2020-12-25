@@ -134,7 +134,7 @@ io.on('connection', function(socket) {
       // set room data
       socket.join(roomJSON.code);
       rooms[roomJSON.code] = roomJSON;
-      let colorData = [0,1,2,3,4,5,6,7];
+      let colorData = [0,1,2,3,4,5,6,7,8,9,10,11];
       roomData[roomJSON.code] = {"list": [socket.id],
                                 "available_colors": colorData.sort(() => Math.random() - 0.5)};
         
@@ -226,6 +226,34 @@ io.on('connection', function(socket) {
       packet.id = socket.id;
       io.in(socket.room).emit("move", packet);
     } catch(e) {};
+  });
+  
+  // handle color change
+  socket.on('color change', function(input, callback) {
+    
+    // check if color is available
+    if (roomData[socket.room].available_colors.includes(input)) {
+      
+      // swap color if possible
+      const index = roomData[socket.room].available_colors.indexOf(input);
+      if (index > -1) {
+        roomData[socket.room].available_colors.splice(index, 1);
+        roomData[socket.room].available_colors.push(socket.color);
+        socket.color = input;
+        let changePacket = {
+          "color": input,
+          "id": socket.id
+        };
+        io.in(socket.room).emit("color swap", changePacket);
+        callback("success");
+      } else {
+        callback("error");
+      }
+    } else {
+      
+      // return error if failed to change color
+      callback("error");
+    }
   });
             
 });
