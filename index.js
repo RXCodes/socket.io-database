@@ -62,7 +62,7 @@ io.on('connection', function(socket) {
   
   // handle disconnection
   socket.on('disconnect', function(reason) {
-    if (socket.joined == false) {
+    if (socket.joined == true) {
       
       // let other clients know player disconnected
       let offlinePacket = {
