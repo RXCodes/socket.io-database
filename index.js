@@ -101,7 +101,9 @@ io.on('connection', function(socket) {
       
       // grant a random person ownership if owner leaves
       if (socket.owner == true && rooms[socket.room].players > 0) {
-        
+        roomData[socket.room].list.sort(() => Math.random() - 0.5);
+        let newOwner = roomData[socket.room].list[0];
+        io.of('/').sockets.get(newOwner);
       }
     }
   });
