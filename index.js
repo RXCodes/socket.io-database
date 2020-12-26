@@ -98,7 +98,7 @@ var startMeeting = function(room, type, reporter, metadata) {
       // announce top candidate
       let summaryPacket = {
         "topVote": topCandidate,
-        "role": role;
+        "role": role
       };
       io.in(room).emit("vote summary", summaryPacket);
       
