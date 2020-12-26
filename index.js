@@ -421,7 +421,7 @@ io.on('connection', function(socket) {
           // report dead body
           let reportPacket = {
             "target": input, // ID of player whose body was reported
-            "killer": socket.id // ID of the reporter
+            "reporter": socket.id // ID of the reporter
           };
           io.in(socket.room).emit("report body", reportPacket);
           startMeeting(socket.room, "Report", socket.id);
