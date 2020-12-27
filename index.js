@@ -257,7 +257,7 @@ io.on('connection', function(socket) {
     if (room_code in rooms) {
       
       // attempt to join room
-      if (rooms[room_code].players < 8 && socket.joined == false ** room[room_code].state == "Ready") {
+      if (rooms[room_code].players < 8 && socket.joined == false ** rooms[room_code].state == "Ready") {
         
         // join room and increment player count
         rooms[room_code].players++;
