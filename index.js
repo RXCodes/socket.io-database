@@ -227,6 +227,7 @@ io.on('connection', function(socket) {
       roomJSON.owner = socket.name;
       roomJSON.state = "Ready";
       roomJSON.code = generateCode();
+      roomJSON.success = "1";
       
       // set room data
       socket.join(roomJSON.code);
@@ -234,9 +235,13 @@ io.on('connection', function(socket) {
       let colorData = [0,1,2,3,4,5,6,7,8,9,10,11];
       roomData[roomJSON.code] = {"list": [socket.id],
                                 "available_colors": colorData.sort(() => Math.random() - 0.5)};
+      socket.color = roomData[roomJSON.code].available_colors[0];
+      roomJSON.colors = {};
+      roomJSON.colors[socket.id] = roomData[roomJSON.code].available_colors[0];
+      roomData[roomJSON.code].available_colors.shift();
         
       // inform player that room was successfully created
-      callback("success");
+      callback(roomJSON);
       
     } else {
       
@@ -268,6 +273,7 @@ io.on('connection', function(socket) {
         io.in(socket.room).emit("new player", joinPacket);
         io.to(socket.id).emit("color", roomData[room_code].available_colors[0]);
         socket.color = roomData[room_code].available_colors[0];
+        roomData[room_code].colors[socket.id] = roomData[room_code].available_colors[0];
         roomData[room_code].available_colors.shift();
         callback("Success");
         
@@ -348,6 +354,7 @@ io.on('connection', function(socket) {
           "id": socket.id
         };
         io.in(socket.room).emit("color swap", changePacket);
+        roomData[socket.room].colors[socket.id] = input;
         callback("success");
       } else {
         callback("error");
