@@ -273,7 +273,7 @@ io.on('connection', function(socket) {
         io.in(socket.room).emit("new player", joinPacket);
         io.to(socket.id).emit("color", roomData[room_code].available_colors[0]);
         socket.color = roomData[room_code].available_colors[0];
-        roomData[room_code].colors[socket.id] = roomData[room_code].available_colors[0];
+        rooms[room_code].colors[socket.id] = roomData[room_code].available_colors[0];
         roomData[room_code].available_colors.shift();
         callback("Success");
         
