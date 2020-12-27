@@ -218,7 +218,6 @@ io.on('connection', function(socket) {
   // create a room with name when called
   socket.on('create', function(name, callback) {
     if (socket.joined == false) {
-      socket.room = socket.id;
       
       // initialize room data
       let roomJSON = {};
@@ -232,6 +231,7 @@ io.on('connection', function(socket) {
       // set room data
       socket.join(roomJSON.code);
       rooms[roomJSON.code] = roomJSON;
+      socket.room = roomJSON.code;
       let colorData = [0,1,2,3,4,5,6,7,8,9,10,11];
       roomData[roomJSON.code] = {"list": [socket.id],
                                 "available_colors": colorData.sort(() => Math.random() - 0.5)};
@@ -315,10 +315,11 @@ io.on('connection', function(socket) {
             room[socket.room].totalTasks = (room[socket.room].players - 1) * 6;
             room[socket.room].crewmates = room[socket.room].players - 1;
             room[socket.room].tasksFinished = 0;
-            if (i == 0) {
+            if (i == 0) { // assign impostor role
               io.to(roomData[socket.room].list[i]).emit("role","Impostor");
+              roomData[socket.room].impostor = roomData[socket.room].list[i];
               io.to(roomData[socket.room].list[i]).role = "Impostor";
-            } else {
+            } else { // assign crewmate role
               io.to(roomData[socket.room].list[i]).emit("role","Crewmate");
               io.to(roomData[socket.room].list[i]).role = "Crewmate";
             }
