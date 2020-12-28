@@ -125,10 +125,18 @@ io.on('connection', function(socket) {
   socket.joined = false;
   socket.owner = false;
   socket.name = "Guest";
+  socket.room = null;
   
   // fetch rooms
   socket.on('fetch', function(input, callback) {
     callback(rooms);
+  });
+  
+  // fetch room data
+  socket.on('fetch room', function(input, callback) {
+    if (socket.room in rooms) {
+      callback(rooms[socket.room]);
+    }
   });
   
   // rename player
