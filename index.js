@@ -10,6 +10,7 @@ app.get('/', function(req, res){
 // initialize variables and functions
 var rooms = {};
 var roomData = {};
+var onlineCount = 0;
 
 // function to generate code
 var generateCode = function() {
@@ -120,12 +121,18 @@ var startMeeting = function(room, type, reporter, metadata) {
 
 // socket connection handler
 io.on('connection', function(socket) {
+  onlineCount++;
   
   // intialize socket variables
   socket.joined = false;
   socket.owner = false;
   socket.name = "Guest";
   socket.room = null;
+  
+  // fetch online user count
+  socket.on('fetch online', function(input, callback) {
+    callback(onlineCount);
+  });
   
   // fetch rooms
   socket.on('fetch', function(input, callback) {
@@ -156,6 +163,7 @@ io.on('connection', function(socket) {
   
   // handle disconnection
   socket.on('disconnect', function(reason) {
+    onlineCount--;
     if (socket.joined == true) {
       
       // let other clients know player disconnected
