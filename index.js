@@ -241,7 +241,7 @@ io.on('connection', function(socket) {
       socket.joined = true;
       rooms[roomJSON.code] = roomJSON;
       socket.room = roomJSON.code;
-      let colorData = [0,1,2,3,4,5,6,7,8,9,10,11];
+      let colorData = ["0","1","2","3","4","5","6","7","8","9","10","11"];
       roomData[roomJSON.code] = {"list": [socket.id],
                                 "available_colors": colorData.sort(() => Math.random() - 0.5)};
       socket.color = roomData[roomJSON.code].available_colors[0];
@@ -351,7 +351,6 @@ io.on('connection', function(socket) {
   socket.on('color change', function(input, callback) {
     
     // check if color is available
-    input = parseInt(input);
     if (input in roomData[socket.room].available_colors) {
       
       // swap color if possible
