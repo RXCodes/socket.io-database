@@ -351,7 +351,8 @@ io.on('connection', function(socket) {
   socket.on('color change', function(input, callback) {
     
     // check if color is available
-    if (roomData[socket.room].available_colors.includes(input)) {
+    input = parseInt(input);
+    if (input in roomData[socket.room].available_colors) {
       
       // swap color if possible
       const index = roomData[socket.room].available_colors.indexOf(input);
