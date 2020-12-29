@@ -369,7 +369,7 @@ io.on('connection', function(socket) {
           "id": socket.id
         };
         io.in(socket.room).emit("color swap", changePacket);
-        roomData[socket.room].colors[socket.id] = input;
+        room[socket.room].colors[socket.id] = input;
         callback("success");
       } else {
         callback("error");
