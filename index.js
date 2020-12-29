@@ -255,6 +255,7 @@ io.on('connection', function(socket) {
       socket.color = roomData[roomJSON.code].available_colors[0];
       roomJSON.colors = {};
       roomJSON.colors[socket.id] = roomData[roomJSON.code].available_colors[0];
+      rooms[roomJSON.code] = roomJSON;
       roomData[roomJSON.code].available_colors.shift();
         
       // inform player that room was successfully created
