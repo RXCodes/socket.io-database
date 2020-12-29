@@ -304,7 +304,8 @@ io.on('connection', function(socket) {
   socket.on('start', function(room_code, callback) {
     
     // check conditions
-    if (socket.owner == true && rooms[socket.room].state == "Ready" && rooms[socket.room].players > 2) {
+    if (socket.joined == true) {
+     if (socket.owner == true && rooms[socket.room].state == "Ready" && rooms[socket.room].players > 2) {
       
       // initiate game and start countdown
       io.in(socket.room).emit("start", "countdown");
@@ -336,6 +337,7 @@ io.on('connection', function(socket) {
         }
       }, 1000 );
     }
+   }
   });
   
   // handle movement
@@ -349,6 +351,9 @@ io.on('connection', function(socket) {
   
   // handle color change
   socket.on('color change', function(input, callback) {
+    
+    // check condition
+    if (socket.joined == true) {
     
     // check if color is available
     if (input in roomData[socket.room].available_colors) {
@@ -373,6 +378,7 @@ io.on('connection', function(socket) {
       
       // return error if failed to change color
       callback("error");
+     }
     }
   });
   
