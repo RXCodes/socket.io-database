@@ -134,6 +134,13 @@ io.on('connection', function(socket) {
     callback(onlineCount);
   });
   
+ // fetch player colors
+  socket.on('fetch colors', function(input, callback) {
+    if (socket.room in rooms) {
+      callback(rooms[socket.room].colors);
+    }
+  });
+  
   // fetch rooms
   socket.on('fetch', function(input, callback) {
     let returnDictionary = {};
