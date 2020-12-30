@@ -355,7 +355,7 @@ io.on('connection', function(socket) {
       let packet = JSON.parse(input);
       packet.id = socket.id;
       io.in(socket.room).emit("move", packet);
-    } catch(e) {};
+    } catch(e) {callback(e)};
   });
   
   // handle color change
