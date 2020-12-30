@@ -263,7 +263,7 @@ io.on('connection', function(socket) {
       socket.color = roomData[roomJSON.code].available_colors[0];
       roomJSON.colors = {};
       roomJSON.colors[socket.id] = roomData[roomJSON.code].available_colors[0];
-      io.to(socket.id).emit("color", roomData[room_code].available_colors[0]);
+      io.to(socket.id).emit("color", roomData[roomJSON.code].available_colors[0]);
       rooms[roomJSON.code] = roomJSON;
       roomData[roomJSON.code].available_colors.shift();
         
