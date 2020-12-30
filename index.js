@@ -153,11 +153,7 @@ io.on('connection', function(socket) {
   // fetch room data
   socket.on('fetch room', function(input, callback) {
     if (socket.room in rooms) {
-      let normal = rooms[socket.room];
-      let process = rooms[socket.room];
-      process.colors = JSON.stringify(process.colors);
-      rooms[socket.room] = normal;
-      callback(process);
+      callback(rooms[socket.room]);
     }
   });
   
