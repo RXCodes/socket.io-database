@@ -136,14 +136,20 @@ io.on('connection', function(socket) {
   
   // fetch rooms
   socket.on('fetch', function(input, callback) {
-    callback(rooms);
+    let returnDictionary = {};
+    Object.keys(rooms).forEach(function(key) {
+      returnDictionary[key] = JSON.stringify(rooms[key]);
+    });
+    callback(returnDictionary);
   });
   
   // fetch room data
   socket.on('fetch room', function(input, callback) {
     if (socket.room in rooms) {
+      let normal = rooms[socket.room];
       let process = rooms[socket.room];
       process.colors = JSON.stringify(process.colors);
+      rooms[socket.room] = normal;
       callback(process);
     }
   });
@@ -257,6 +263,7 @@ io.on('connection', function(socket) {
       socket.color = roomData[roomJSON.code].available_colors[0];
       roomJSON.colors = {};
       roomJSON.colors[socket.id] = roomData[roomJSON.code].available_colors[0];
+      io.to(socket.id).emit("color", roomData[room_code].available_colors[0]);
       rooms[roomJSON.code] = roomJSON;
       roomData[roomJSON.code].available_colors.shift();
         
