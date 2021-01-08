@@ -63,7 +63,7 @@ var syncData = function() {
     port: 443,
     method: 'POST',
     headers: {
-    'Content-Type': 'application/json',
+    'Content-Type': 'application/x-www-form-urlencoded',
     'Content-Length': packet.length
     }
   };
