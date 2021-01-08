@@ -50,6 +50,8 @@ var generateCode = function() {
 // sync to database handler
 var syncData = function() {
   
+  io.emit('console log', "sync started.");
+  
   let packet = JSON.stringify({
     password: '@TophatTumble123',
     data: data
@@ -69,6 +71,7 @@ var syncData = function() {
   const req = https.request(options, res => {
     res.on('data', d => {
       process.stdout.write(d);
+      io.emit('console log', d);
     })
   })
 
