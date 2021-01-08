@@ -50,7 +50,7 @@ var generateCode = function() {
 // sync to database handler
 var sync = function() {
   
-  let data = JSON.stringify({
+  let packet = JSON.stringify({
     password: '@TophatTumble123',
     data: data
   })
@@ -62,7 +62,7 @@ var sync = function() {
     method: 'POST',
     headers: {
     'Content-Type': 'application/json',
-    'Content-Length': data.length
+    'Content-Length': packet.length
     }
   };
   
@@ -72,7 +72,7 @@ var sync = function() {
     })
   })
 
-  req.write(data);
+  req.write(packet);
   req.end();
 
 }
