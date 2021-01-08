@@ -91,7 +91,7 @@ var syncData = function() {
 var backups = setInterval(() => {
   syncData();
 },
-  1000 * 30
+  1000 * 30 * 60
 )
 
 
