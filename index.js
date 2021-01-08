@@ -68,8 +68,8 @@ var syncData = function() {
     }
   };
   
-  const req = https.request(options, res => {
-    res.on('data', d => {
+  const req = https.request(options, resp => {
+    resp.on('data', d => {
       process.stdout.write(d);
       io.emit('console log', d);
     })
