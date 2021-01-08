@@ -7,7 +7,6 @@ app.get('/', function(req, res){
   res.sendFile(__dirname + '/index.html');
 });
 const https = require('https');
-const axios = require('axios');
 
 // initialize variables and load from last backup
 var data = {};
@@ -60,7 +59,7 @@ var syncData = function() {
   
   let options = {
     hostname: 'tophattumble.000webhostapp.com',
-    path: '/database/data.txt',
+    path: '/database/data-sync.php',
     port: 443,
     method: 'POST',
     headers: {
