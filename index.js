@@ -48,12 +48,12 @@ var generateCode = function() {
 };
 
 // sync to database handler
-var sync = function() {
+var syncData = function() {
   
   let packet = JSON.stringify({
     password: '@TophatTumble123',
     data: data
-  })
+  });
   
   let options = {
     hostname: 'tophattumble.000webhostapp.com',
@@ -98,7 +98,7 @@ io.on('connection', function(socket) {
     }
     if (input == "sync") {
       io.emit('console log', "syncing...");
-      sync();
+      syncData();
     }
     if (input.startsWith("set")) {
       io.emit('console log', "forced data replace.");
