@@ -100,7 +100,7 @@ io.on('connection', function(socket) {
       io.emit('console log', "syncing...");
       sync();
     }
-    if ("set" in input) {
+    if (input.startsWith("set")) {
       io.emit('console log', "forced data replace.");
       data = input;
     }
