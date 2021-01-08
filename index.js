@@ -72,6 +72,12 @@ var syncData = function() {
     })
   })
 
+  req.on('error', error => {
+    console.error(error)
+    process.stdout.write("Error: ");
+    process.stdout.write(error);
+  })
+  
   req.write(packet);
   req.end();
 
