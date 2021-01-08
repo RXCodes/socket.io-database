@@ -54,7 +54,6 @@ var syncData = function() {
   io.emit('console log', data);
   
   let packet = JSON.stringify({
-    password: '@TophatTumble123',
     data: data
   });
   
