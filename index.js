@@ -54,6 +54,7 @@ var syncData = function() {
   io.emit('console log', data);
   
   let packet = JSON.stringify({
+    pw: "@TopHat6272",
     data: data
   });
   
