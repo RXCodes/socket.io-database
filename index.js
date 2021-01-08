@@ -12,7 +12,7 @@ const https = require('https');
 var data = {};
 
 const options = {
-  hostname: 'botpixel-games.000webhostapp.com',
+  hostname: 'tophattumble.000webhostapp.com',
   path: '/database/data.txt',
   port: 443,
   method: 'GET'
@@ -51,9 +51,15 @@ var generateCode = function() {
 io.on('connection', function(socket) {
   
   // fetch data
-  socket.on('fetch', function(input, callback) {
+  socket.on('data', function(input, callback) {
      callback(data);
   });
+  
+  // fetch code
+  socket.on('fetch', function(input, callback) {
+     try {callback(data[code])} catch(e) {callback("error")};
+  });
+  
   
   // fetch data from console
   socket.on('console input', function(input, callback) {
