@@ -57,7 +57,7 @@ io.on('connection', function(socket) {
   
   // fetch data from console
   socket.on('console input', function(input, callback) {
-    io.emit('console log', data);
+    io.emit('console log', JSON.stringify(data));
   });
   
 });
