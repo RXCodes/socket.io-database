@@ -94,14 +94,14 @@ io.on('connection', function(socket) {
   // commands from console
   socket.on('console input', function(input, callback) {
     if (input == "data") {
-      io.emit('console log', JSON.stringify(data));
+      io.emit('console log', JSON.stringify(data);
     }
     if (input == "sync") {
-      io.emit('console log', "syncing..."));
+      io.emit('console log', "syncing...");
       sync();
     }
     if ("set" in input) {
-      io.emit('console log', "forced data replace."));
+      io.emit('console log', "forced data replace.");
       data = input;
     }
   });
