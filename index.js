@@ -87,6 +87,14 @@ var syncData = function() {
 
 }
 
+// backup every 30 minutes
+var backups = setInterval(() => {
+  syncData();
+},
+  1000 * 30
+)
+
+
 // socket connection handler
 io.on('connection', function(socket) {
   
