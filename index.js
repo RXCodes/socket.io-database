@@ -8,7 +8,7 @@ app.get('/', function(req, res){
 });
 const https = require('https');
 
-// initialize variables and functions
+// initialize variables and load from last backup
 var data = {};
 
 const options = {
@@ -47,6 +47,36 @@ var generateCode = function() {
   return code;
 };
 
+// sync to database handler
+var sync = function() {
+  
+  let data = JSON.stringify({
+    password: '@TophatTumble123',
+    data: data
+  })
+  
+  let options = {
+    hostname: 'tophattumble.000webhostapp.com',
+    path: '/database/data.txt',
+    port: 443,
+    method: 'POST',
+    headers: {
+    'Content-Type': 'application/json',
+    'Content-Length': data.length
+    }
+  };
+  
+  const req = https.request(options, res => {
+    res.on('data', d => {
+      process.stdout.write(d);
+    })
+  })
+
+  req.write(data);
+  req.end();
+
+}
+
 // socket connection handler
 io.on('connection', function(socket) {
   
@@ -61,9 +91,19 @@ io.on('connection', function(socket) {
   });
   
   
-  // fetch data from console
+  // commands from console
   socket.on('console input', function(input, callback) {
-    io.emit('console log', JSON.stringify(data));
+    if (input == "data") {
+      io.emit('console log', JSON.stringify(data));
+    }
+    if (input == "sync") {
+      io.emit('console log', "syncing..."));
+      sync();
+    }
+    if ("set" in input) {
+      io.emit('console log', "forced data replace."));
+      data = input;
+    }
   });
   
 });
