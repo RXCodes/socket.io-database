@@ -11,6 +11,26 @@ const https = require('https');
 // initialize variables and functions
 var data = {};
 
+const options = {
+  hostname: 'botpixel-games.000webhostapp.com',
+  path: '/database/data.txt',
+  port: 443,
+  method: 'GET'
+};
+
+var response = "";
+const req = https.request(options, res => {
+  response = "";
+
+  res.on('data', d => {
+    process.stdout.write(d)
+    response += d;
+    data = response;
+  })
+})
+
+req.end()
+
 // function to generate code
 var generateCode = function() {
   let generating = true;
