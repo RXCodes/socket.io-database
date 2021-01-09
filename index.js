@@ -108,6 +108,12 @@ io.on('connection', function(socket) {
      try {callback(data[code])} catch(e) {callback("error")};
   });
   
+  // generate code
+  socket.on('generate', function(input, callback) {
+    let code = generateCode();
+    data[input] = input;
+    callback(code);
+  });
   
   // commands from console
   socket.on('console input', function(input, callback) {
