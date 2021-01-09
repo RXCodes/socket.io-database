@@ -40,7 +40,7 @@ var generateCode = function() {
     for (i = 0; i < 8; i++) {
       code = code + String.fromCharCode(65 + (Math.random() * 25));
     };
-    if (code in codes == false) {
+    if (code in data == false) {
       generating = false;
     }
   }
