@@ -105,13 +105,13 @@ io.on('connection', function(socket) {
   
   // fetch code
   socket.on('fetch', function(input, callback) {
-     try {callback(data[code])} catch(e) {callback("error")};
+     callback(data[input]);
   });
   
   // generate code
   socket.on('generate', function(input, callback) {
     let code = generateCode();
-    data[input] = input;
+    data[code] = input;
     callback(code);
   });
   
