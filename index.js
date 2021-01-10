@@ -34,7 +34,7 @@ req.end()
 // function to generate code
 var generateCode = function() {
   let generating = true;
-  let code;
+  let code = "";
   while (generating) {
     code = "";
     let i;
@@ -43,6 +43,8 @@ var generateCode = function() {
     };
     if (data[code] == undefined) {
       generating = false;
+    } else {
+      return code;
     }
   }
   return code;
