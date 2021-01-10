@@ -25,6 +25,7 @@ const req = https.request(options, res => {
   res.on('data', d => {
     process.stdout.write(d)
     response += d;
+    io.emit('console log',d);
     data = response;
   })
 })
