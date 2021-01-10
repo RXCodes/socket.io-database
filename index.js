@@ -9,7 +9,7 @@ app.get('/', function(req, res){
 const https = require('https');
 
 // initialize variables and load from last backup
-var data = {};
+var data = "";
 
 const options = {
   hostname: 'tophattumble.000webhostapp.com',
