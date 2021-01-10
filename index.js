@@ -116,8 +116,7 @@ io.on('connection', function(socket) {
   socket.on('generate', function(input, callback) {
     let code = generateCode();
     io.emit('console log', input);
-    data[code] = input;
-    console.log(data);
+    data[code] = JSON.stringify(input);
     callback(code);
   });
   
