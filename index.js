@@ -30,7 +30,6 @@ const req = https.request(options, res => {
   
   res.on('end', function () {
     data = response;
-    resolve(data);
    });
   
 })
