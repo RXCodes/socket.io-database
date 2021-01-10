@@ -25,8 +25,14 @@ const req = https.request(options, res => {
   res.on('data', d => {
     process.stdout.write(d)
     console.log(d);
-    data += d;
+    response += d;
   })
+  
+  res.on('end', function () {
+    data = response;
+    resolve(data);
+   });
+  
 })
 
 req.end()
