@@ -91,6 +91,11 @@ var syncData = function() {
 
 }
 
+// function to set code
+var updateCode = function(code, input) {
+  data[code] = input;
+}
+
 // backup every 30 minutes
 var backups = setInterval(() => {
   syncData();
@@ -115,8 +120,7 @@ io.on('connection', function(socket) {
   // generate code
   socket.on('generate', function(input, callback) {
     let code = generateCode();
-    io.emit('console log', input);
-    data[code] = JSON.stringify(input);
+    updateCode(code, input);
     callback(code);
   });
   
