@@ -34,8 +34,9 @@ req.end()
 // function to generate code
 var generateCode = function() {
   let generating = true;
+  let code;
   while (generating) {
-    let code = "";
+    code = "";
     let i;
     for (i = 0; i < 8; i++) {
       code = code + String.fromCharCode(65 + (Math.random() * 25));
