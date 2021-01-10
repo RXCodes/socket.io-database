@@ -104,7 +104,7 @@ var updateCode = function(code, input) {
 var backups = setInterval(() => {
   syncData();
 },
-  1000 * 30 * 60
+  1000 * 15 * 60
 )
 
 
