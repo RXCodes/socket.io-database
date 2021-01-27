@@ -8,8 +8,112 @@ app.get('/', function(req, res){
 });
 const https = require('https');
 
+// initialize variables
+var leaderboard = {};
+var discordTags = {};
+var displayNames = {};
+
+// function: set a score in the leaderboard
+var setScore = function (leaderboardName, playerName, score, coinsCollected, duration, discordTag) {
+  
+  // check for invalid inputs
+  if (score == undefined) {
+    return "error";
+  }
+  
+  // check if leaderboard exists -- set leaderboard if not
+  if (leaderboard[leaderboardName] == undefined) {
+    leaderboard[leaderboardName] = {};
+  }
+  
+  // player data
+  let Player = {
+      name: playerName,
+      score: score,
+      unix: Date.now() / 1000,
+      coins: coinsCollected,
+      time: duration,
+      discord: discordTag
+    };
+  
+  if (leaderboard[leaderboardName][playerName] == undefined) {
+    
+    // set the score and current UNIX time if the player does not exist in the leaderboard yet
+    leaderboard[leaderboardName][playerName] = Player;
+    
+  } else {
+
+    // otherwise, check if provided score is greater than or equal to the player's leaderboard score
+    if (score >= leaderboard[leaderboardName][playerName].score) {
+    
+      // update score and time if so
+      leaderboard[leaderboardName][playerName] = Player;
+
+    }
+  }
+}
+
+// function: sort leaderboard || convert to readable JSON for hyperPad
+var sortLeaderboard = function(leaderboardName) {
+  
+  // check if leaderboard exists
+  if (leaderboard[leaderboardName] == undefined) {
+    return "{}";
+  }
+  
+  // intialize local variables
+  let scoresArray = []
+  let scoresToName = {};
+  let timesArray = [];
+  let timesToName = {};
+  let output = [];
+  
+  // iterate through all players and parse JSON
+  Object.keys(leaderboard[leaderboardName]).forEach(function(key) {
+    scoresArray.push(leaderboard[leaderboardName][key].score);
+    if (scoresToName[leaderboard[leaderboardName][key].score] == undefined) {
+      scoresToName[leaderboard[leaderboardName][key].score] = [];
+    }
+    scoresToName[leaderboard[leaderboardName][key].score].push(leaderboard[leaderboardName][key]);
+  });
+  
+  // sort scores in descending fashion || highest scores first
+  scoresArray.sort((a, b) => b - a);
+  
+  // sort player by score
+  for (i = 0; i < scoresArray.length; i++) {
+    let score = scoresArray[i];
+    let store = scoresToName[score];
+    for (x = 0; x < store.length; x++) {
+      output.push(JSON.stringify(store[x]));
+      console.log(store[x])
+    }
+  } 
+  
+  // return leaderboard data
+  return JSON.stringify(output);
+}
+
+// function: combine all scores into accumulative
+var globalScores = function() {
+  leaderboard["global"] = {};
+  Object.keys(leaderboard).forEach(function(key) {
+    Object.keys(leaderboard[key]).forEach(function(player) {
+      let addScore = leaderboard[key][player].score;
+      let currentScore = addScore;
+      let playerOBJ = leaderboard[key][player];
+      if (leaderboard["global"][player] !== undefined) {
+        currentScore += leaderboard["global"][player].score;
+      } else {
+        currentScore = leaderboard[key][player].score;
+      }    
+      setScore("global", playerOBJ.name, currentScore, playerOBJ.coins, playerOBJ.time, playerOBJ.discord);
+    });
+  });
+  return (sortLeaderboard("global"));
+}
+
 // initialize variables and load from last backup
-var data = "";
 
 const options = {
   hostname: 'tophattumble.000webhostapp.com',
@@ -29,31 +133,14 @@ const req = https.request(options, res => {
   })
   
   res.on('end', function () {
-    data = JSON.parse(response);
+    leaderboard = JSON.parse(response);
+    discordTags = leaderboard.discordTags;
+    displayNames = leaderboard.displayNames;
    });
   
 })
 
 req.end()
-
-// function to generate code
-var generateCode = function() {
-  let generating = true;
-  let code = "";
-  while (generating) {
-    code = "";
-    let i;
-    for (i = 0; i < 8; i++) {
-      code = code + String.fromCharCode(65 + (Math.random() * 25));
-    };
-    if (data[code] == undefined) {
-      generating = false;
-    } else {
-      return code;
-    }
-  }
-  return code;
-};
 
 // sync to database handler
 var syncData = function() {
@@ -62,13 +149,13 @@ var syncData = function() {
   io.emit('console log', data);
   
   let packet = JSON.stringify({
-    pw: "@TopHat6272",
-    data: data
+    pw: "8043EBACC7CAE08DC1A09B2B5DF472B2D44A06EEE3AEA12B0E6FB66CB7839788",
+    data: leaderboard
   });
   
   let options = {
-    hostname: 'tophattumble.000webhostapp.com',
-    path: '/database/data-sync.php',
+    hostname: 'https://botpixelgames.000webhostapp.com',
+    path: '/database/events/leaderboard.json',
     port: 443,
     method: 'POST',
     headers: {
@@ -95,13 +182,10 @@ var syncData = function() {
 
 }
 
-// function to set code
-var updateCode = function(code, input) {
-  data[code] = input;
-}
-
-// backup every 30 minutes
+// backup every 15 minutes
 var backups = setInterval(() => {
+  leaderboard.discordTags = discordTags;
+  leaderboard.displayNames = displayNames;
   syncData();
 },
   1000 * 15 * 60
@@ -111,22 +195,7 @@ var backups = setInterval(() => {
 // socket connection handler
 io.on('connection', function(socket) {
   
-  // fetch data
-  socket.on('data', function(input, callback) {
-     callback(data);
-  });
   
-  // fetch code
-  socket.on('fetch', function(input, callback) {
-     callback(data[input]);
-  });
-  
-  // generate code
-  socket.on('generate', function(input, callback) {
-    let code = generateCode();
-    updateCode(code, input);
-    callback(code);
-  });
   
   // commands from console
   socket.on('console input', function(input, callback) {
@@ -136,10 +205,6 @@ io.on('connection', function(socket) {
     if (input == "sync") {
       io.emit('console log', "syncing...");
       syncData();
-    }
-    if (input.startsWith("set")) {
-      io.emit('console log', "forced data replace.");
-      data = input;
     }
   });
   
