@@ -205,7 +205,21 @@ io.on('connection', function(socket) {
   
   // registration
   socket.on('register', function(input, callback) {
+  let success = false;
+    try {
+      let data = JSON.parse(input);
+      success = true;
+    } catch(e) {
+      callback("error");
+    }
     
+    if (success) {
+      if (displayNames.hasOwnProperty(data.name) == false && discordTags.hasOwnProperty(data.discord) == false) {
+        callback("success");
+      } else {
+        callback("error");
+      }
+    }
   });
   
   // leaderboard fetch
