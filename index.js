@@ -202,23 +202,52 @@ var backups = setInterval(() => {
 
 // socket connection handler
 io.on('connection', function(socket) {
+  socket.auth = false;
   
   // registration
   socket.on('register', function(input, callback) {
   let success = false;
+  let data = {};
     try {
-      let data = JSON.parse(input);
+      data = JSON.parse(input);
       success = true;
     } catch(e) {
       callback("error");
     }
     
-    if (success) {
+    if (success && socket.auth == false) {
       if (displayNames.hasOwnProperty(data.name) == false && discordTags.hasOwnProperty(data.discord) == false) {
-        callback("success");
-      } else {
-        callback("error");
-      }
+        let name = data.name;
+        let discord = data.discord;
+        let login = false;
+        let letters = /^[0-9a-zA-Z]+#/;
+
+        if (discord.indexOf("#") !== -1 && name.length <= 20 && discord.length <= 30) {
+        let difference = discord.length - discord.indexOf("#");
+        if (difference == 5 && letters.test(discord)) {
+          callback("success");
+          login = true;
+          socket.auth = true;
+          displayNames[name] = discord;
+          discordTags[discord] = true;
+          socket.name = name;
+          socket.discord = discord;
+          }
+        } 
+      }       
+    }
+    
+    if (data !== {} && displayNames[data.name] == data.discord) {
+      login = true;
+      socket.name = data.name;
+      socket.discord = data.discord;
+      socket.auth = true;
+    }
+    
+    if (login == false) {
+      callback("error");
+    } else {
+      callback("success");
     }
   });
   
