@@ -58,7 +58,7 @@ var sortLeaderboard = function(leaderboardName) {
   
   // check if leaderboard exists
   if (leaderboard[leaderboardName] == undefined) {
-    return "{}";
+    return "[]";
   }
   
   // intialize local variables
@@ -203,7 +203,15 @@ var backups = setInterval(() => {
 // socket connection handler
 io.on('connection', function(socket) {
   
+  // registration
+  socket.on('register', function(input, callback) {
+    
+  });
   
+  // leaderboard fetch
+  socket.on('leaderboard', function(input, callback) {
+    callback(sortLeaderboard(input));
+  });
   
   // commands from console
   socket.on('console input', function(input, callback) {
