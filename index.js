@@ -114,12 +114,19 @@ var globalScores = function() {
 }
 
 // initialize variables and load from last backup
+let packet = JSON.stringify({
+    pw: "8043EBACC7CAE08DC1A09B2B5DF472B2D44A06EEE3AEA12B0E6FB66CB7839788"
+  });
 
 const options = {
-  hostname: 'tophattumble.000webhostapp.com',
-  path: '/database/data.txt',
+  hostname: 'https://botpixelgames.000webhostapp.com',
+  path: '/database/events/fetchData.php',
   port: 443,
-  method: 'GET'
+  method: 'POST',
+  headers: {
+    'Content-Type': 'application/x-www-form-urlencoded',
+    'Content-Length': packet.length
+    }
 };
 
 var response = "";
@@ -140,7 +147,8 @@ const req = https.request(options, res => {
   
 })
 
-req.end()
+req.write(packet);
+req.end();
 
 // sync to database handler
 var syncData = function() {
@@ -155,7 +163,7 @@ var syncData = function() {
   
   let options = {
     hostname: 'https://botpixelgames.000webhostapp.com',
-    path: '/database/events/leaderboard.json',
+    path: '/database/events/sync-data.php',
     port: 443,
     method: 'POST',
     headers: {
