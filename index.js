@@ -260,7 +260,7 @@ io.on('connection', function(socket) {
   // commands from console
   socket.on('console input', function(input, callback) {
     if (input == "data") {
-      io.emit('console log', JSON.stringify(data));
+      io.emit('console log', JSON.stringify(leaderboard));
     }
     if (input == "sync") {
       io.emit('console log', "syncing...");
