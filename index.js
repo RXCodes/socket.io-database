@@ -157,10 +157,10 @@ var syncData = function() {
   io.emit('console log', "sync started.");
   io.emit('console log', leaderboard);
 
-  let packet = {
+  let packet = JSON.stringify({
     pw: "8043EBACC7CAE08DC1A09B2B5DF472B2D44A06EEE3AEA12B0E6FB66CB7839788",
     data: leaderboard
-  };
+  });
   
   let options = {
     hostname: 'botpixelgames.000webhostapp.com',
