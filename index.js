@@ -125,7 +125,7 @@ const options = {
   port: 443,
   method: 'POST',
   headers: {
-    'Content-Type': 'application/x-www-form-urlencoded',
+    'Content-Type': 'application/json',
     'Content-Length': initPacket.length
     }
 };
