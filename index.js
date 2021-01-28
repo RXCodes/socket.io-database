@@ -208,6 +208,7 @@ io.on('connection', function(socket) {
   // registration
   socket.on('register', function(input, callback) {
   let success = false;
+  let login = false;
   let data = {};
     try {
       data = JSON.parse(input);
@@ -220,7 +221,6 @@ io.on('connection', function(socket) {
       if (displayNames.hasOwnProperty(data.name) == false && discordTags.hasOwnProperty(data.discord) == false) {
         let name = data.name;
         let discord = data.discord;
-        let login = false;
         let letters = /^[0-9a-zA-Z]+#/;
 
         if (discord.indexOf("#") !== -1 && name.length <= 20 && discord.length <= 30) {
