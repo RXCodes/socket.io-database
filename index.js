@@ -161,15 +161,19 @@ const req = https.request(options, res => {
   
   res.on('end', function () {
     leaderboard = JSON.parse(response);
-    discordTags = leaderboard.discordTags;
-    displayNames = leaderboard.displayNames;
+    if (leaderboard.displayNames !== undefined && leaderboard.displayNames !== []) {
+      displayNames = leaderboard.displayNames;
+    }
+    if (leaderboard.discordTags !== undefined && leaderboard.discordTags !== []) {
+      discordTags = leaderboard.discordTags;
+    }
     if (leaderboard.highScores !== undefined && leaderboard.highScores !== []) {
       highScores = leaderboard.highScores;
     }
     if (leaderboard.levelAttempts !== undefined && leaderboard.levelAttempts !== []) {
       levelAttempts = leaderboard.levelAttempts;
     }
-    if (leaderboard.global !== undefined && leaderboard.globak !== []) {
+    if (leaderboard.global !== undefined && leaderboard.global !== []) {
       global = leaderboard.global;
     }
    });
