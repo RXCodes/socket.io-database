@@ -364,6 +364,7 @@ io.on('connection', function(socket) {
   socket.on('console input', function(input, callback) {
     if (input == "data") {
       io.emit('console log', JSON.stringify(leaderboard));
+      io.emit('console log', JSON.stringify(highScores));
     }
     if (input == "sync") {
       io.emit('console log', "syncing...");
