@@ -295,12 +295,26 @@ io.on('connection', function(socket) {
   
   // leaderboard fetch
   socket.on('leaderboard', function(input, callback) {
-    callback(sortLeaderboard(input));
+    let output = sortLeaderboard(input);
+    let rank = "--";
+    for (let i = 0; i < output.length; i++) {
+      if (output[i].name == socket.name) {
+        rank = i + 1;
+      }
+    }
+    callback(output, rank);
   });
   
   // global leaderboard fetch
   socket.on('global leaderboard', function(input, callback) {
-    callback(globalScores());
+    let output = globalScores();
+    let rank = "--";
+    for (let i = 0; i < output.length; i++) {
+      if (output[i].name == socket.name) {
+        rank = i + 1;
+      }
+    }
+    callback(output, rank);
   });
   
   // set score & increment attempts
