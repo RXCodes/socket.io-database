@@ -106,7 +106,7 @@ var sortLeaderboard = function(leaderboardName) {
     let store = scoresToName[score];
     for (x = 0; x < store.length; x++) {
       output.push(JSON.stringify(store[x]));
-      console.log(store[x])
+      console.log(store[x]);
     }
   } 
   
