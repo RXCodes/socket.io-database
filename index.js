@@ -124,10 +124,10 @@ var globalScores = function() {
         if (playerOBJ.name !== undefined && playerOBJ.discord !== undefined) {
           let currentScore = 0;
           if (leaderboard["global"][player] !== undefined) {
-            currentScore = leaderboard["global"][player].score;
-            currentScore += leaderboard[key][player].score;
+            currentScore = parseInt(leaderboard["global"][player].score);
+            currentScore += parseInt(leaderboard[key][player].score);
           } else {
-            currentScore = leaderboard[key][player].score;
+            currentScore = parseInt(leaderboard[key][player].score);
           }    
           setScore("global", playerOBJ.name, currentScore, playerOBJ.coins, playerOBJ.time, playerOBJ.discord);
         }
