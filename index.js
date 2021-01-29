@@ -267,7 +267,7 @@ io.on('connection', function(socket) {
     callback(sortLeaderboard(input));
   });
   
-  // set score
+  // set score & increment attempts
   socket.on('set score', function(input, callback) {
     if (socket.auth) {
       let data = {};
@@ -280,7 +280,31 @@ io.on('connection', function(socket) {
       }
       
       if (success) {
-        setScore(data.Level, socket.name, data.coins, data.time, socket.discord);
+        
+        // set score & high score
+        setScore(data.Level, socket.name, data.score, data.coins, data.time, socket.discord);
+        if (highScores[socket.discord] == undefined) {
+          highScores[socket.discord] = {};
+        }
+        if (highScores[socket.discord][data.level] == undefined) {
+          highScores[socket.discord][data.level] = data.score;
+        } else {
+          if (highScores[socket.discord][data.level] < data.score) {
+            highScores[socket.discord][data.level] = data.score;
+          }
+        }
+        
+        // add attempt
+        if (levelAttempts[socket.discord] == undefined) {
+          levelAttempts[socket.discord] = {};
+        }
+        if (levelAttempts[socket.discord][data.level] == undefined) {
+          levelAttempts[socket.discord][data.level] = 1;
+        } else {
+          levelAttempts[socket.discord][data.level] += 1;
+        }
+        
+        // return success
         callback("success");
       }
     }
