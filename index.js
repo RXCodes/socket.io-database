@@ -12,6 +12,8 @@ const https = require('https');
 var leaderboard = {};
 var discordTags = {};
 var displayNames = {};
+var highScores = {};
+var levelAttempts = {};
 
 // function: set a score in the leaderboard
 var setScore = function (leaderboardName, playerName, score, coinsCollected, duration, discordTag) {
@@ -144,6 +146,12 @@ const req = https.request(options, res => {
     leaderboard = JSON.parse(response);
     discordTags = leaderboard.discordTags;
     displayNames = leaderboard.displayNames;
+    if (leaderboard.highScores !== undefined) {
+      highScores = leaderboard.highScores;
+    }
+    if (leaderboard.levelAttempts !== undefined) {
+      levelAttempts = leaderboard.levelAttempts;
+    }
    });
   
 })
@@ -195,6 +203,8 @@ var syncData = function() {
 var backups = setInterval(() => {
   leaderboard.discordTags = discordTags;
   leaderboard.displayNames = displayNames;
+  leaderboard.highScores = highScores;
+  leaderboard.levelAttempts = levelAttempts;
   syncData();
 },
   1000 * 15 * 60
@@ -255,6 +265,25 @@ io.on('connection', function(socket) {
   // leaderboard fetch
   socket.on('leaderboard', function(input, callback) {
     callback(sortLeaderboard(input));
+  });
+  
+  // set score
+  socket.on('set score', function(input, callback) {
+    if (socket.auth) {
+      let data = {};
+      let success = false;
+      try {
+        data = JSON.parse(input);
+        success = true;
+      } catch(e) {
+        callback("error");
+      }
+      
+      if (success) {
+        setScore(data.Level, socket.name, data.coins, data.time, socket.discord);
+        callback("success");
+      }
+    }
   });
   
   // commands from console
