@@ -114,19 +114,25 @@ var sortLeaderboard = function(leaderboardName) {
   return JSON.stringify(output);
 }
 
-// function: combine all scores into accumulative
+// function: combine all scores into accumulative scores -- global leaderboard
 var globalScores = function() {
   leaderboard["global"] = {};
-  Object.keys(highScores).forEach(function(player) {
-    let addScore = 0
-    Object.keys(highScores[player]).forEach(function(levels) {  
-      Object.keys(highScores[player][levels]).forEach(function(score) {  
-        addScore += parseInt(score);
+  Object.keys(leaderboard).forEach(function(key) {
+    if (key !== "global") {
+      Object.keys(leaderboard[key]).forEach(function(player) {
+        let playerOBJ = leaderboard[key][player];
+        if (playerOBJ.name !== undefined && playerOBJ.discord !== undefined) {
+          let currentScore = 0;
+          if (leaderboard["global"][player] !== undefined) {
+            currentScore = leaderboard["global"][player].score;
+            currentScore += leaderboard[key][player].score;
+          } else {
+            currentScore = leaderboard[key][player].score;
+          }    
+          setScore("global", playerOBJ.name, currentScore, playerOBJ.coins, playerOBJ.time, playerOBJ.discord);
+        }
       });
-    });
-    let currentScore = parseInt(addScore);
-    
-    setScore("global", discordTags[player], currentScore, "--", "--", player);
+    }
   });
   return (sortLeaderboard("global"));
 }
