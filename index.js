@@ -117,18 +117,16 @@ var sortLeaderboard = function(leaderboardName) {
 // function: combine all scores into accumulative
 var globalScores = function() {
   leaderboard["global"] = {};
-  Object.keys(leaderboard).forEach(function(key) {
-    Object.keys(leaderboard[key]).forEach(function(player) {
-      let addScore = leaderboard[key][player].score;
-      let currentScore = parseInt(addScore);
-      let playerOBJ = leaderboard[key][player];
-      if (leaderboard["global"][player] !== undefined) {
-        currentScore += parseInt(leaderboard["global"][player].score);
-      } else {
-        currentScore = parseInt(leaderboard[key][player].score);
-      }    
-      setScore("global", playerOBJ.name, currentScore, playerOBJ.coins, playerOBJ.time, playerOBJ.discord);
+  Object.keys(highScores).forEach(function(player) {
+    let addScore = 0
+    Object.keys(highScores[player]).forEach(function(levels) {  
+      Object.keys(highScores[player][levels]).forEach(function(score) {  
+        addScore += parseInt(score);
+      });
     });
+    let currentScore = parseInt(addScore);
+    
+    setScore("global", discordTags[player], currentScore, "--", "--", player);
   });
   return (sortLeaderboard("global"));
 }
@@ -358,6 +356,19 @@ io.on('connection', function(socket) {
         "Attempts": levelAttempts[socket.discord]
       };
       callback(JSON.stringify(playerPacket));
+    }
+  });
+  
+  // individual player data fetch
+  socket.on('player fetch', function(input, callback) {
+    if (socket.auth) {
+      if (displayNames[input] !== undefined) {
+        let playerPacket = {
+          "Best": highScores[displayNames[input]],
+          "Attempts": levelAttempts[displayNames[input]]
+        };
+        callback(JSON.stringify(playerPacket));
+      }
     }
   });
   
