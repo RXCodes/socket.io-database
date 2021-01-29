@@ -163,13 +163,13 @@ const req = https.request(options, res => {
     leaderboard = JSON.parse(response);
     discordTags = leaderboard.discordTags;
     displayNames = leaderboard.displayNames;
-    if (leaderboard.highScores !== undefined) {
+    if (leaderboard.highScores !== undefined && leaderboard.highScores !== []) {
       highScores = leaderboard.highScores;
     }
-    if (leaderboard.levelAttempts !== undefined) {
+    if (leaderboard.levelAttempts !== undefined && leaderboard.levelAttempts !== []) {
       levelAttempts = leaderboard.levelAttempts;
     }
-    if (leaderboard.global !== undefined) {
+    if (leaderboard.global !== undefined && leaderboard.globak !== []) {
       global = leaderboard.global;
     }
    });
@@ -301,6 +301,13 @@ io.on('connection', function(socket) {
       }
       
       if (success && levelCheck(data.level)) {
+
+        // increment run count
+        if (global.runs == undefined) {
+          global.runs = 1;
+        } else {
+          global.runs += 1;
+        }
         
         // set score & high score
         setScore(data.level, socket.name, data.score, data.coins, data.time, socket.discord);
