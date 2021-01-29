@@ -14,6 +14,23 @@ var discordTags = {};
 var displayNames = {};
 var highScores = {};
 var levelAttempts = {};
+var global = {};
+
+// function: check a level
+var levelCheck = function (levelName) {
+  let deniedLevels = {
+    "discordTags": 1,
+    "displayNames": 1,
+    "highScores": 1,
+    "levelAttempts": 1,
+    "global": 1
+  }
+  if (deniedLevels[levelName] !== 1) {
+    return true;
+  } else {
+    return false;
+  }
+};
 
 // function: set a score in the leaderboard
 var setScore = function (leaderboardName, playerName, score, coinsCollected, duration, discordTag) {
@@ -152,6 +169,9 @@ const req = https.request(options, res => {
     if (leaderboard.levelAttempts !== undefined) {
       levelAttempts = leaderboard.levelAttempts;
     }
+    if (leaderboard.global !== undefined) {
+      global = leaderboard.global;
+    }
    });
   
 })
@@ -205,6 +225,7 @@ var backups = setInterval(() => {
   leaderboard.displayNames = displayNames;
   leaderboard.highScores = highScores;
   leaderboard.levelAttempts = levelAttempts;
+  leaderboard.global = global;
   syncData();
 },
   1000 * 15 * 60
@@ -279,7 +300,7 @@ io.on('connection', function(socket) {
         callback("error");
       }
       
-      if (success) {
+      if (success && levelCheck(data.level) {
         
         // set score & high score
         setScore(data.Level, socket.name, data.score, data.coins, data.time, socket.discord);
@@ -307,6 +328,17 @@ io.on('connection', function(socket) {
         // return success
         callback("success");
       }
+    }
+  });
+  
+  // player data fetch
+  socket.on('player data', function(input, callback) {
+    if (socket.auth) {
+      let playerPacket = {
+        "Best": highScores[socket.discord],
+        "Attempts": levelAttempts[socket.discord]
+      };
+      callback(JSON.stringify(playerPacket));
     }
   });
   
