@@ -300,7 +300,7 @@ io.on('connection', function(socket) {
         callback("error");
       }
       
-      if (success && levelCheck(data.level) {
+      if (success && levelCheck(data.level)) {
         
         // set score & high score
         setScore(data.Level, socket.name, data.score, data.coins, data.time, socket.discord);
