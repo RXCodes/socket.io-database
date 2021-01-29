@@ -266,7 +266,7 @@ io.on('connection', function(socket) {
           login = true;
           socket.auth = true;
           displayNames[name] = discord;
-          discordTags[discord] = true;
+          discordTags[discord] = name;
           socket.name = name;
           socket.discord = discord;
           }
@@ -279,6 +279,7 @@ io.on('connection', function(socket) {
       socket.name = data.name;
       socket.discord = data.discord;
       socket.auth = true;
+      discordTags[data.discord] = data.name;
     }
     
     if (login == false) {
@@ -326,10 +327,10 @@ io.on('connection', function(socket) {
           highScores[socket.discord] = {};
         }
         if (highScores[socket.discord][data.level] == undefined) {
-          highScores[socket.discord][data.level] = data.score;
+          highScores[socket.discord][data.level] = parseInt(data.score);
         } else {
           if (highScores[socket.discord][data.level] < data.score) {
-            highScores[socket.discord][data.level] = data.score;
+            highScores[socket.discord][data.level] = parseInt(data.score);
           }
         }
         
