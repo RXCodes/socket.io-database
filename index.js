@@ -293,6 +293,11 @@ io.on('connection', function(socket) {
     callback(sortLeaderboard(input));
   });
   
+  // global leaderboard fetch
+  socket.on('global leaderboard', function(input, callback) {
+    callback(globalScores());
+  });
+  
   // set score & increment attempts
   socket.on('set score', function(input, callback) {
     if (socket.auth) {
