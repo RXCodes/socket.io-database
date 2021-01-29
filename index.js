@@ -120,12 +120,12 @@ var globalScores = function() {
   Object.keys(leaderboard).forEach(function(key) {
     Object.keys(leaderboard[key]).forEach(function(player) {
       let addScore = leaderboard[key][player].score;
-      let currentScore = addScore;
+      let currentScore = parseInt(addScore);
       let playerOBJ = leaderboard[key][player];
       if (leaderboard["global"][player] !== undefined) {
-        currentScore += leaderboard["global"][player].score;
+        currentScore += parseInt(leaderboard["global"][player].score);
       } else {
-        currentScore = leaderboard[key][player].score;
+        currentScore = parseInt(leaderboard[key][player].score);
       }    
       setScore("global", playerOBJ.name, currentScore, playerOBJ.coins, playerOBJ.time, playerOBJ.discord);
     });
