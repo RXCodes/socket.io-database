@@ -303,7 +303,7 @@ io.on('connection', function(socket) {
       if (success && levelCheck(data.level)) {
         
         // set score & high score
-        setScore(data.Level, socket.name, data.score, data.coins, data.time, socket.discord);
+        setScore(data.level, socket.name, data.score, data.coins, data.time, socket.discord);
         if (highScores[socket.discord] == undefined) {
           highScores[socket.discord] = {};
         }
