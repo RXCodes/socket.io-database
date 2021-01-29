@@ -313,6 +313,7 @@ io.on('connection', function(socket) {
         } else {
           global.runs += 1;
         }
+        io.emit("attempt", global.runs);
         
         // set score & high score
         setScore(data.level, socket.name, data.score, data.coins, data.time, socket.discord);
@@ -352,6 +353,11 @@ io.on('connection', function(socket) {
       };
       callback(JSON.stringify(playerPacket));
     }
+  });
+  
+  // fetch amount of global attempts
+  socket.on('global attempts', function(input, callback) {
+    callback(global.attempts);
   });
   
   // commands from console
