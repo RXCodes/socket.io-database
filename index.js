@@ -7,6 +7,7 @@ app.get('/', function(req, res){
   res.sendFile(__dirname + '/index.html');
 });
 const https = require('https');
+const querystring = require('querystring');
 
 // initialize variables
 var leaderboard = {};
@@ -189,9 +190,9 @@ var syncData = function() {
   io.emit('console log', "sync started.");
   io.emit('console log', leaderboard);
 
-  let packet = JSON.stringify({
-    pw: "8043EBACC7CAE08DC1A09B2B5DF472B2D44A06EEE3AEA12B0E6FB66CB7839788",
-    data: leaderboard
+  let packet = querystring.stringify({
+    'pw': "8043EBACC7CAE08DC1A09B2B5DF472B2D44A06EEE3AEA12B0E6FB66CB7839788",
+    'data': leaderboard
   });
   
   let options = {
@@ -200,7 +201,7 @@ var syncData = function() {
     port: 443,
     method: 'POST',
     headers: {
-    'Content-Type': 'application/json',
+    'Content-Type': 'application/x-www-form-urlencoded',
     'Content-Length': packet.length
     }
   };
