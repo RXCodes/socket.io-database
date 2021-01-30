@@ -106,9 +106,9 @@ var sortLeaderboard = function(leaderboardName) {
     let score = scoresArray[i];
     let store = scoresToName[score];
     for (x = 0; x < store.length; x++) {
-      store.verification = 0;
-      if (verification[store.discord]) {
-        store.verification = 1;
+      store[x].verification = 0;
+      if (verification[store[x].discord]) {
+        store[x].verification = 1;
       }
       output.push(JSON.stringify(store[x]));
     }
