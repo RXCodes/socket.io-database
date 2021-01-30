@@ -17,6 +17,7 @@ var highScores = {};
 var levelAttempts = {};
 var global = {};
 var verification = {};
+var world = {};
 
 // function: check a level
 var levelCheck = function (levelName) {
