@@ -248,7 +248,7 @@ var scoreAnnounce = function (player) {
     port: 443,
     method: 'POST',
     headers: {
-    'Content-Type': 'application/x-www-form-urlencoded',
+    'Content-Type': 'application/json',
     'Content-Length': packet.length
     }
   };
@@ -296,7 +296,7 @@ var verificationAnnounce = function (player) {
     port: 443,
     method: 'POST',
     headers: {
-    'Content-Type': 'application/x-www-form-urlencoded',
+    'Content-Type': 'application/json',
     'Content-Length': packet.length
     }
   };
@@ -344,7 +344,7 @@ var attemptsAnnounce = function (count) {
     port: 443,
     method: 'POST',
     headers: {
-    'Content-Type': 'application/x-www-form-urlencoded',
+    'Content-Type': 'application/json',
     'Content-Length': packet.length
     }
   };
@@ -393,7 +393,7 @@ var newHighScore = function (player, score, level) {
     port: 443,
     method: 'POST',
     headers: {
-    'Content-Type': 'application/x-www-form-urlencoded',
+    'Content-Type': 'application/json',
     'Content-Length': packet.length
     }
   };
