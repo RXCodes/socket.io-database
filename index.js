@@ -134,12 +134,12 @@ var globalScores = function() {
             currentScore += parseInt(leaderboard[key][player].score);
             coinAmount = parseInt(leaderboard["global"][player].coins);
             coinAmount += parseInt(leaderboard[key][player].coins);
-            totalTime = parseInt(leaderboard["global"][player].time);
-            totalTime += parseInt(leaderboard[key][player].time);
+            totalTime = parseFloat(leaderboard["global"][player].time);
+            totalTime += parseFloat(leaderboard[key][player].time);
           } else {
             currentScore = parseInt(leaderboard[key][player].score);
             coinAmount = parseInt(leaderboard[key][player].coins);
-            totalTime = parseInt(leaderboard[key][player].time);
+            totalTime = parseFloat(leaderboard[key][player].time);
           }    
           setScore("global", playerOBJ.name, currentScore, coinAmount, totalTime, playerOBJ.discord);
         }
