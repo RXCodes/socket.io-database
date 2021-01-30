@@ -422,7 +422,7 @@ io.on('connection', function(socket) {
   
   // fetch amount of global attempts
   socket.on('global attempts', function(input, callback) {
-    callback(global.attempts);
+    callback(world.runs);
   });
   
   // commands from console
