@@ -238,7 +238,7 @@ var scoreAnnounce = function (player) {
     }
   ];
   
-  let packet = querystring.stringify({
+  let packet = JSON.stringify({
     'content': ("<:TiltedRocket:637829833312960512> **" + player + "** currently has a total score of **" + leaderboard.global[player].score + 
                      ", ranking **#" + rank + "** on the global leaderboard!"),
     'embed': embed
@@ -288,7 +288,7 @@ var verificationAnnounce = function (player) {
     }
   ];
   
-  let packet = querystring.stringify({
+  let packet = JSON.stringify({
     'content': ("<:TiltedRocket:637829833312960512> **" + player + "** has been verified!"),
     'embed': embed
   });
@@ -337,7 +337,7 @@ var attemptsAnnounce = function (count) {
     }
   ];
   
-  let packet = querystring.stringify({
+  let packet = JSON.stringify({
     "content": ("<:TiltedRocket:637829833312960512> We have reached **" + count + "** global runs count!"),
     'embed': embed
   });
@@ -387,7 +387,7 @@ var newHighScore = function (player, score, level) {
     }
   ];
   
-  let packet = querystring.stringify({
+  let packet = JSON.stringify({
     'content': ("<:TiltedRocket:637829833312960512> **" + player + "** got a new personal high score of **" + score + "** on " + level + "!"),
     'embed': embed
   });
