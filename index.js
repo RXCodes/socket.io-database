@@ -223,6 +223,7 @@ var scoreAnnounce = function (player) {
       rank = i + 1;
     }
   }
+  if (leaderboard.global[player] !== undefined && socket.main && socket.auth) {
   let embed = [{
       "title": ("Nice job, " + player + "!"),
       "description": ("<:TiltedRocket:637829833312960512> **" + player + "** currently has a total score of **" + leaderboard.global[player].score + 
@@ -267,7 +268,7 @@ var scoreAnnounce = function (player) {
   
   req.write(packet);
   req.end();
-
+  }
 }
 
 // function: announce verification
@@ -471,6 +472,7 @@ var backups = setInterval(() => {
 
 // socket connection handler
 io.on('connection', function(socket) {
+  socket.main = false;
   socket.auth = false;
   
   // registration
@@ -621,6 +623,11 @@ io.on('connection', function(socket) {
         callback(JSON.stringify(playerPacket));
       }
     }
+  });
+
+  // notify server that player is in main menu
+  socket.on('main menu', function(input, callback) {
+    socket.main = true;
   });
   
   // fetch amount of global attempts
