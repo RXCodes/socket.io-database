@@ -298,7 +298,7 @@ io.on('connection', function(socket) {
     let output = JSON.parse(sortLeaderboard(input));
     let rank = "--";
     for (var i = 0; i < output.length; i++) {
-      if (output[i].name == socket.name) {
+      if (JSON.parse(output[i]).name == socket.name) {
         rank = i + 1;
       }
     }
@@ -310,7 +310,7 @@ io.on('connection', function(socket) {
     let output = JSON.parse(globalScores());
     let rank = "--";
     for (var i = 0; i < output.length; i++) {
-      if (output[i].name == socket.name) {
+      if (JSON.parse(output[i]).name == socket.name) {
         rank = i + 1;
       }
     }
