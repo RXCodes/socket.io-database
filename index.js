@@ -239,7 +239,7 @@ var scoreAnnounce = function (player) {
   ];
   
   let packet = querystring.stringify({
-    'embed': JSON.stringify({"body":{"embed":embed}})
+    'embed': embed
   });
   
   let options = {
@@ -287,7 +287,7 @@ var verificationAnnounce = function (player) {
   ];
   
   let packet = querystring.stringify({
-    'embed': JSON.stringify({"body":{"embed":embed}})
+    'embed': embed
   });
   
   let options = {
@@ -335,7 +335,7 @@ var attemptsAnnounce = function (count) {
   ];
   
   let packet = querystring.stringify({
-    'embed': JSON.stringify({"body":{"embed":embed}})
+    'embed': embed
   });
   
   let options = {
@@ -384,7 +384,7 @@ var newHighScore = function (player, score, level) {
   ];
   
   let packet = querystring.stringify({
-    'embed': JSON.stringify({"body":{"embed":embed}})
+    'embed': embed
   });
   
   let options = {
