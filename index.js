@@ -36,8 +36,8 @@ var levelCheck = function (levelName) {
 
 // function: test environment || not in final product
 var demoTest = function() {
-  var sampleNames = ["Andrew","Belista","Carl","Drista","Edward","Frank","Gru","Hannah","Izaiah","Jack","Mike","Kayla","Steve","Alex","Poki","Matthew","Ethan","Trinity","Quasar","Lich"];
-  for (let i = 0; i < 10; i++) {
+  var sampleNames = ["Andrew","Belista","Carl","Drista","Edward","Frank","Gru","Hannah","Izaiah","Jack","Mike","Kayla","Steve","Alex","Poki","Matthew","Ethan","Trinity","Quasar","Lich","Lamar","Kevin","Daniel","Tommy"];
+  for (let i = 0; i < sampleNames.length; i++) {
     let random = Math.round(Math.random() * 100000);
     setScore("Test", sampleNames[i], random, 12800, 1200, "@myDiscord#0000");
     setScore("Yeet", sampleNames[i], random, 12800, 1200, "@myDiscord#0000");
