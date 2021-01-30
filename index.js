@@ -206,7 +206,6 @@ const req = https.request(options, res => {
     if (leaderboard.verification !== undefined && leaderboard.verification !== []) {
       verification = leaderboard.verification;
     }   
-    demoTest();
   });  
 })
 
