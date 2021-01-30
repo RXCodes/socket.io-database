@@ -227,7 +227,7 @@ var scoreAnnounce = function (player) {
   let embed = [{
       "title": ("Nice job, " + player + "!"),
       "description": ("<:TiltedRocket:637829833312960512> **" + player + "** currently has a total score of **" + leaderboard.global[player].score + 
-                     ", ranking **#" + rank + "** on the global leaderboard!"),
+                     "**, ranking **#" + rank + "** on the global leaderboard!"),
       "url": "https://www.hyperpad.com/projects/6u3jezje",
       "color": "10574079",
       "fields": [
@@ -239,9 +239,9 @@ var scoreAnnounce = function (player) {
   ];
   
   let packet = JSON.stringify({
-    'content': ("<:TiltedRocket:637829833312960512> **" + player + "** currently has a total score of **" + leaderboard.global[player].score + 
+    'placeholder': ("<:TiltedRocket:637829833312960512> **" + player + "** currently has a total score of **" + leaderboard.global[player].score + 
                      ", ranking **#" + rank + "** on the global leaderboard!"),
-    'embed': embed
+    'embeds': embed
   });
   
   let options = {
@@ -289,8 +289,8 @@ var verificationAnnounce = function (player) {
   ];
   
   let packet = JSON.stringify({
-    'content': ("<:TiltedRocket:637829833312960512> **" + player + "** has been verified!"),
-    'embed': embed
+    'placeholder': ("<:TiltedRocket:637829833312960512> **" + player + "** has been verified!"),
+    'embeds': embed
   });
   
   let options = {
@@ -338,8 +338,8 @@ var attemptsAnnounce = function (count) {
   ];
   
   let packet = JSON.stringify({
-    "content": ("<:TiltedRocket:637829833312960512> We have reached **" + count + "** global runs count!"),
-    'embed': embed
+    "placeholder": ("<:TiltedRocket:637829833312960512> We have reached **" + count + "** global runs count!"),
+    'embeds': embed
   });
   
   let options = {
@@ -388,8 +388,8 @@ var newHighScore = function (player, score, level) {
   ];
   
   let packet = JSON.stringify({
-    'content': ("<:TiltedRocket:637829833312960512> **" + player + "** got a new personal high score of **" + score + "** on " + level + "!"),
-    'embed': embed
+    'placeholder': ("<:TiltedRocket:637829833312960512> **" + player + "** got a new personal high score of **" + score + "** on " + level + "!"),
+    'embeds': embed
   });
   
   let options = {
