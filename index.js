@@ -74,6 +74,10 @@ var setScore = function (leaderboardName, playerName, score, coinsCollected, dur
     
     // set the score and current UNIX time if the player does not exist in the leaderboard yet
     leaderboard[leaderboardName][playerName] = Player;
+    if (leaderboardName !== "Global" && leaderboardName !== "global") {
+      newHighScore(Player.name, Player.score, leaderboardName);
+    }
+    return true;
     
   } else {
 
@@ -82,6 +86,10 @@ var setScore = function (leaderboardName, playerName, score, coinsCollected, dur
     
       // update score and time if so
       leaderboard[leaderboardName][playerName] = Player;
+      if (leaderboardName !== "Global" && leaderboardName !== "global") {
+        newHighScore(Player.name, Player.score, leaderboardName);
+      }
+      return true;
 
     }
   }
@@ -215,7 +223,104 @@ const req = https.request(options, res => {
 req.write(initPacket);
 req.end();
 
-// sync to database handler
+// function: announce global attempts
+var attemptsAnnounce = function (count) {
+  let embed = [{
+      "title": "New Global Milestone!",
+      "description": ("<:TiltedRocket:637829833312960512> We have reached **" + count + "** global runs count!"),
+      "url": "https://www.hyperpad.com/projects/6u3jezje",
+      "color": "16756568",
+      "fields": [
+      ],
+      "author": {
+        "name": ("Next milestone: " + parseInt(count + 50))
+      }
+    }
+  ];
+  
+  let packet = querystring.stringify({
+    'embed': JSON.stringify(embed)
+  });
+  
+  let options = {
+    hostname: 'discord.com',
+    path: '/api/webhooks/805080253206233099/v13Qj84Ftye-V09AFrtwlB6fyAZ2tIHwwwIpheoim4fFDEgqyStEB_Cmwfd-IyRuuDwf',
+    port: 443,
+    method: 'POST',
+    headers: {
+    'Content-Type': 'application/x-www-form-urlencoded',
+    'Content-Length': packet.length
+    }
+  };
+  
+  const req = https.request(options, resp => {
+    resp.on('data', d => {
+      process.stdout.write(d);
+      io.emit('console log', JSON.stringify(d));
+    })
+  })
+
+  req.on('error', error => {
+    console.error(error)
+    process.stdout.write("Error: ");
+    process.stdout.write(error);
+  })
+  
+  req.write(packet);
+  req.end();
+
+}
+
+// function: announce new high score
+var newHighScore = function (player, score, level) {
+  globalScores();
+  let embed = [{
+      "title": "New High Score!",
+      "description": ("<:TiltedRocket:637829833312960512> **" + player + "** got a new personal high score of **" + score + "** on " + level + "!"),
+      "url": "https://www.hyperpad.com/projects/6u3jezje",
+      "color": "7602008",
+      "fields": [
+      ],
+      "author": {
+        "name": (player + " now has a total score of " + leaderboard.global[player].score + ".")
+      }
+    }
+  ];
+  
+  let packet = querystring.stringify({
+    'embed': JSON.stringify(embed)
+  });
+  
+  let options = {
+    hostname: 'discord.com',
+    path: '/api/webhooks/805080253206233099/v13Qj84Ftye-V09AFrtwlB6fyAZ2tIHwwwIpheoim4fFDEgqyStEB_Cmwfd-IyRuuDwf',
+    port: 443,
+    method: 'POST',
+    headers: {
+    'Content-Type': 'application/x-www-form-urlencoded',
+    'Content-Length': packet.length
+    }
+  };
+  
+  const req = https.request(options, resp => {
+    resp.on('data', d => {
+      process.stdout.write(d);
+      io.emit('console log', JSON.stringify(d));
+    })
+  })
+
+  req.on('error', error => {
+    console.error(error)
+    process.stdout.write("Error: ");
+    process.stdout.write(error);
+  })
+  
+  req.write(packet);
+  req.end();
+
+}
+
+// function: sync to database handler
 var syncData = function() {
   
   io.emit('console log', "sync started.");
