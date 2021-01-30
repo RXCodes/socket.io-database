@@ -16,6 +16,7 @@ var displayNames = {};
 var highScores = {};
 var levelAttempts = {};
 var global = {};
+var verification = {};
 
 // function: check a level
 var levelCheck = function (levelName) {
@@ -105,8 +106,11 @@ var sortLeaderboard = function(leaderboardName) {
     let score = scoresArray[i];
     let store = scoresToName[score];
     for (x = 0; x < store.length; x++) {
+      store.verification = 0;
+      if (verification[store.discord]) {
+        store.verification = 1;
+      }
       output.push(JSON.stringify(store[x]));
-      console.log(store[x]);
     }
   } 
   
@@ -189,6 +193,9 @@ const req = https.request(options, res => {
     if (leaderboard.global !== undefined && leaderboard.global !== []) {
       global = leaderboard.global;
     }
+    if (leaderboard.verification !== undefined && leaderboard.verification !== []) {
+      verification = leaderboard.verification;
+    }
    });
   
 })
@@ -243,6 +250,7 @@ var backups = setInterval(() => {
   leaderboard.highScores = highScores;
   leaderboard.levelAttempts = levelAttempts;
   leaderboard.global = global;
+  leaderboard.verification = verification;
   syncData();
 },
   1000 * 15 * 60
@@ -407,13 +415,31 @@ io.on('connection', function(socket) {
   
   // commands from console
   socket.on('console input', function(input, callback) {
-    if (input == "data") {
+    if (input == "data") { // view data
       io.emit('console log', JSON.stringify(leaderboard));
       io.emit('console log', JSON.stringify(highScores));
     }
-    if (input == "sync") {
+    if (input == "sync") { // backup
       io.emit('console log', "syncing...");
       syncData();
+    }
+    if (input.startsWith("verify")) {
+      let discord = input.substring(7);
+      if (discordTags[discord] !== undefined) {
+        verification[discord] = true;
+        io.emit('console log', "successfully verified discord user.");
+      }
+    }
+    if (input == "discord") {
+      io.emit('console log', "Unverified users:");
+      let output = "";
+      Object.keys(discordTags).forEach(function(key) {
+        if (verification[key]) {
+          output += key;
+          output += "\n";
+        }
+      });
+      io.emit('console log', output);
     }
   });
   
