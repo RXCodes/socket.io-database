@@ -223,7 +223,7 @@ var scoreAnnounce = function (player) {
       rank = i + 1;
     }
   }
-  if (leaderboard.global[player] !== undefined && socket.main && socket.auth) {
+  if (leaderboard.global[player] !== undefined) {
   let embed = [{
       "title": ("Nice job, " + player + "!"),
       "description": ("<:TiltedRocket:637829833312960512> **" + player + "** currently has a total score of **" + leaderboard.global[player].score + 
@@ -637,7 +637,9 @@ io.on('connection', function(socket) {
   
   // handle disconnection
   socket.on('disconnect', function(reason) {
-    scoreAnnounce(socket.name);
+    if (socket.auth && socket.main) {
+      scoreAnnounce(socket.name);
+    }
   });
   
   // commands from console
