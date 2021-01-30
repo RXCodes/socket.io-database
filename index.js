@@ -434,7 +434,7 @@ io.on('connection', function(socket) {
       io.emit('console log', "Unverified users:");
       let output = "";
       Object.keys(discordTags).forEach(function(key) {
-        if (verification[key]) {
+        if (verification[key] == undefined) {
           output += key;
           output += "\n";
         }
