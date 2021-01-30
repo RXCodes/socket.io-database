@@ -599,6 +599,9 @@ io.on('connection', function(socket) {
         } else {
           levelAttempts[socket.discord][data.level] += 1;
         }
+        if (world.runs % 50 == 0) {
+          attemptsAnnounce(world.runs);
+        }
         
         // return success
         callback("success");
@@ -633,6 +636,11 @@ io.on('connection', function(socket) {
   // fetch amount of global attempts
   socket.on('global attempts', function(input, callback) {
     callback(world.runs);
+  });
+  
+  // handle disconnection
+  socket.on('disconnect', function(reason) {
+    scoreAnnounce(socket.name);
   });
   
   // commands from console
