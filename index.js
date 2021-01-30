@@ -223,6 +223,111 @@ const req = https.request(options, res => {
 req.write(initPacket);
 req.end();
 
+// function: announce player scores
+var scoreAnnounce = function (player) {
+  globalScores();
+  let output = JSON.parse(globalScores());
+  let rank = "Unranked";
+  for (var i = 0; i < output.length; i++) {
+    if (JSON.parse(output[i]).name == player) {
+      rank = i + 1;
+    }
+  }
+  let embed = [{
+      "title": ("Nice job, " + player + "!"),
+      "description": ("<:TiltedRocket:637829833312960512> **" + player + "** currently has a total score of **" + leaderboard.global[player].score + 
+                     ", ranking **#" + rank + "** on the global leaderboard!"),
+      "url": "https://www.hyperpad.com/projects/6u3jezje",
+      "color": "10574079",
+      "fields": [
+      ],
+      "author": {
+        "name": "Join the event and take your chances on free prizes!"
+      }
+    }
+  ];
+  
+  let packet = querystring.stringify({
+    'embed': JSON.stringify(embed)
+  });
+  
+  let options = {
+    hostname: 'discord.com',
+    path: '/api/webhooks/805080253206233099/v13Qj84Ftye-V09AFrtwlB6fyAZ2tIHwwwIpheoim4fFDEgqyStEB_Cmwfd-IyRuuDwf',
+    port: 443,
+    method: 'POST',
+    headers: {
+    'Content-Type': 'application/x-www-form-urlencoded',
+    'Content-Length': packet.length
+    }
+  };
+  
+  const req = https.request(options, resp => {
+    resp.on('data', d => {
+      process.stdout.write(d);
+      io.emit('console log', JSON.stringify(d));
+    })
+  })
+
+  req.on('error', error => {
+    console.error(error)
+    process.stdout.write("Error: ");
+    process.stdout.write(error);
+  })
+  
+  req.write(packet);
+  req.end();
+
+}
+
+// function: announce verification
+var verificationAnnounce = function (player) {
+  let embed = [{
+      "title": "New Contestant Verified!",
+      "description": ("<:TiltedRocket:637829833312960512> **" + player + "** has been verified!"),
+      "url": "https://www.hyperpad.com/projects/6u3jezje",
+      "color": "10574079",
+      "fields": [
+      ],
+      "author": {
+        "name": "Join the event and take your chances on free prizes!"
+      }
+    }
+  ];
+  
+  let packet = querystring.stringify({
+    'embed': JSON.stringify(embed)
+  });
+  
+  let options = {
+    hostname: 'discord.com',
+    path: '/api/webhooks/805080253206233099/v13Qj84Ftye-V09AFrtwlB6fyAZ2tIHwwwIpheoim4fFDEgqyStEB_Cmwfd-IyRuuDwf',
+    port: 443,
+    method: 'POST',
+    headers: {
+    'Content-Type': 'application/x-www-form-urlencoded',
+    'Content-Length': packet.length
+    }
+  };
+  
+  const req = https.request(options, resp => {
+    resp.on('data', d => {
+      process.stdout.write(d);
+      io.emit('console log', JSON.stringify(d));
+    })
+  })
+
+  req.on('error', error => {
+    console.error(error)
+    process.stdout.write("Error: ");
+    process.stdout.write(error);
+  })
+  
+  req.write(packet);
+  req.end();
+
+}
+
 // function: announce global attempts
 var attemptsAnnounce = function (count) {
   let embed = [{
@@ -545,6 +650,7 @@ io.on('connection', function(socket) {
       if (discordTags[discord] !== undefined) {
         verification[discord] = true;
         io.emit('console log', "successfully verified discord user.");
+        verificationAnnounce(discordTags[discord]);
       }
     }
     if (input == "discord") {
