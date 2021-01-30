@@ -196,6 +196,18 @@ const req = https.request(options, res => {
     if (leaderboard.verification !== undefined && leaderboard.verification !== []) {
       verification = leaderboard.verification;
     }
+    
+    // test environment || not in final product
+    var sampleNames = ["Andrew","Belista","Carl","Drista","Edward","Frank","Gru","Hannah","Izaiah","Jack"];
+    for (let i = 0; i < 10; i++) {
+       let random = Math.round(Math.random() * 100000);
+     setScore("Test", sampleNames[i], random, 12800, 1200, "@myDiscord#0000");
+  setScore("Yeet", sampleNames[i], random, 12800, 1200, "@myDiscord#0000");
+}
+
+    
+    
+    
    });
   
 })
@@ -448,11 +460,3 @@ io.on('connection', function(socket) {
 http.listen(port, function() {
   console.log('listening on *:' + port);
 });
-
-// test environment || not in final product
-var sampleNames = ["Andrew","Belista","Carl","Drista","Edward","Frank","Gru","Hannah","Izaiah","Jack"];
-for (let i = 0; i < 10; i++) {
-  let random = Math.round(Math.random() * 100000);
-  setScore("Test", sampleNames[i], random, 12800, 1200, "@myDiscord#0000");
-  setScore("Yeet", sampleNames[i], random, 12800, 1200, "@myDiscord#0000");
-}
