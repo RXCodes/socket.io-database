@@ -25,7 +25,9 @@ var levelCheck = function (levelName) {
     "displayNames": 1,
     "highScores": 1,
     "levelAttempts": 1,
-    "global": 1
+    "global": 1,
+    "world": 1,
+    "verification": 1
   }
   if (deniedLevels[levelName] !== 1) {
     return true;
@@ -200,8 +202,8 @@ const req = https.request(options, res => {
     if (leaderboard.levelAttempts !== undefined && leaderboard.levelAttempts !== []) {
       levelAttempts = leaderboard.levelAttempts;
     }
-    if (leaderboard.global !== undefined && leaderboard.global !== []) {
-      global = leaderboard.global;
+    if (leaderboard.world !== undefined && leaderboard.world !== []) {
+      world = leaderboard.world;
     }
     if (leaderboard.verification !== undefined && leaderboard.verification !== []) {
       verification = leaderboard.verification;
@@ -258,7 +260,7 @@ var backups = setInterval(() => {
   leaderboard.displayNames = displayNames;
   leaderboard.highScores = highScores;
   leaderboard.levelAttempts = levelAttempts;
-  leaderboard.global = global;
+  leaderboard.world = world;
   leaderboard.verification = verification;
   syncData();
 },
@@ -357,12 +359,12 @@ io.on('connection', function(socket) {
       if (success && levelCheck(data.level)) {
 
         // increment run count
-        if (global.runs == undefined) {
-          global.runs = 1;
+        if (world.runs == undefined) {
+          world.runs = 1;
         } else {
-          global.runs += 1;
+          world.runs += 1;
         }
-        io.emit("attempt", global.runs);
+        io.emit("attempt", world.runs);
         
         // set score & high score
         setScore(data.level, socket.name, data.score, data.coins, data.time, socket.discord);
