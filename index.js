@@ -123,13 +123,21 @@ var globalScores = function() {
         let playerOBJ = leaderboard[key][player];
         if (playerOBJ.name !== undefined && playerOBJ.discord !== undefined) {
           let currentScore = 0;
+          let coinAmount = 0;
+          let totalTime = 0;
           if (leaderboard["global"][player] !== undefined) {
             currentScore = parseInt(leaderboard["global"][player].score);
             currentScore += parseInt(leaderboard[key][player].score);
+            coinAmount = parseInt(leaderboard["global"][player].coins);
+            coinAmount += parseInt(leaderboard[key][player].coins);
+            totalTime = parseInt(leaderboard["global"][player].time);
+            totalTime += parseInt(leaderboard[key][player].time);
           } else {
             currentScore = parseInt(leaderboard[key][player].score);
+            coinAmount = parseInt(leaderboard[key][player].coins);
+            totalTime = parseInt(leaderboard[key][player].time);
           }    
-          setScore("global", playerOBJ.name, currentScore, playerOBJ.coins, playerOBJ.time, playerOBJ.discord);
+          setScore("global", playerOBJ.name, currentScore, coinAmount, totalTime, playerOBJ.discord);
         }
       });
     }
