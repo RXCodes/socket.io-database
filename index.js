@@ -297,7 +297,7 @@ io.on('connection', function(socket) {
   socket.on('leaderboard', function(input, callback) {
     let output = JSON.parse(sortLeaderboard(input));
     let rank = "--";
-    for (let i = 0; i < output.length; i++) {
+    for (var i = 0; i < output.length; i++) {
       if (output[i].name == socket.name) {
         rank = i + 1;
       }
@@ -309,7 +309,7 @@ io.on('connection', function(socket) {
   socket.on('global leaderboard', function(input, callback) {
     let output = JSON.parse(globalScores());
     let rank = "--";
-    for (let i = 0; i < output.length; i++) {
+    for (var i = 0; i < output.length; i++) {
       if (output[i].name == socket.name) {
         rank = i + 1;
       }
