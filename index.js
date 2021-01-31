@@ -373,6 +373,9 @@ var attemptsAnnounce = function (count) {
 
 // function: announce new high score
 var newHighScore = function (player, score, level) {
+  if (score == 0) {
+    return false;
+  }
   globalScores();
   let embed = [{
       "title": "New High Score!",
