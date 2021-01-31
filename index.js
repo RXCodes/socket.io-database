@@ -485,9 +485,9 @@ io.on('connection', function(socket) {
   
   // registration
   socket.on('register', function(input, callback) {
-  let success = false;
-  let login = false;
-  let data = {};
+    let success = false;
+    let login = false;
+    let data = {};
     try {
       data = JSON.parse(input);
       success = true;
@@ -516,7 +516,7 @@ io.on('connection', function(socket) {
       }       
     }
     
-    if (data !== {} && displayNames[data.name] == data.discord) {
+    if (data !== {} && displayNames[data.name] == data.discord && data.hasOwnProperty("name") && data.hasOwnProperty("discord")) {
       login = true;
       socket.name = data.name;
       socket.discord = data.discord;
