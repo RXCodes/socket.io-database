@@ -229,7 +229,7 @@ var scoreAnnounce = function (player) {
       "description": ("<:TiltedRocket:637829833312960512> **" + player + "** currently has a total score of **" + leaderboard.global[player].score + 
                      "**, ranking **#" + rank + "** on the global leaderboard!"),
       "url": "https://www.hyperpad.com/projects/6u3jezje",
-      "color": "10574079",
+      "color": "5814783",
       "fields": [
       ],
       "author": {
@@ -381,7 +381,7 @@ var newHighScore = function (player, score, level) {
       "title": "New High Score!",
       "description": ("<:TiltedRocket:637829833312960512> **" + player + "** got a new personal high score of **" + score + "** on " + level + "!"),
       "url": "https://www.hyperpad.com/projects/6u3jezje",
-      "color": "7602008",
+      "color": "16726586",
       "fields": [
       ],
       "author": {
