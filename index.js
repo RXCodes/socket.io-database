@@ -73,7 +73,7 @@ var setScore = function (leaderboardName, playerName, score, coinsCollected, dur
   } else {
 
     // otherwise, check if provided score is greater than or equal to the player's leaderboard score
-    if (score >= leaderboard[leaderboardName][playerName].score) {
+    if (parseInt(score) > leaderboard[leaderboardName][playerName].score) {
     
       // update score and time if so
       leaderboard[leaderboardName][playerName] = Player;
