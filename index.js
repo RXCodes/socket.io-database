@@ -217,7 +217,7 @@ req.end();
 // load replay data
 const optionsReplay = {
   hostname: 'botpixelgames.000webhostapp.com',
-  path: '/database/events/fetchData.php',
+  path: '/database/events/fetchReplays.php',
   port: 443,
   method: 'POST',
   headers: {
@@ -464,7 +464,7 @@ var syncData = function() {
   let packet = querystring.stringify({
     'pw': "8043EBACC7CAE08DC1A09B2B5DF472B2D44A06EEE3AEA12B0E6FB66CB7839788",
     'data': JSON.stringify(leaderboard),
-    'replay': JSON.stringify(replays)
+    'replays': JSON.stringify(replays)
   });
   
   let options = {
@@ -691,6 +691,11 @@ io.on('connection', function(socket) {
   // fetch amount of global attempts
   socket.on('global attempts', function(input, callback) {
     callback(world.runs);
+  });
+  
+  // fetch unix timestamp
+  socket.on('timestamp', function(input, callback) {
+    callback(Date.now() / 1000);
   });
   
   // handle disconnection
