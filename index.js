@@ -738,7 +738,7 @@ io.on('connection', function(socket) {
       io.emit('console log', output);
     }
     if (input == "replays") {
-      io.emit('console log', replays);
+      io.emit('console log', JSON.stringify(replays));
     }
   });
   
