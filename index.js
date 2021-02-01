@@ -18,6 +18,7 @@ var levelAttempts = {};
 var global = {};
 var verification = {};
 var world = {};
+var replays = {};
 
 // function: check a level
 var levelCheck = function (levelName) {
@@ -212,6 +213,36 @@ const req = https.request(options, res => {
 
 req.write(initPacket);
 req.end();
+
+// load replay data
+const optionsReplay = {
+  hostname: 'botpixelgames.000webhostapp.com',
+  path: '/database/events/fetchData.php',
+  port: 443,
+  method: 'POST',
+  headers: {
+    'Content-Type': 'application/json',
+    'Content-Length': initPacket.length
+    }
+};
+
+var responseReplay = "";
+const req2 = https.request(options, res => {
+  responseReplay = "";
+
+  res.on('data', d => {
+    process.stdout.write(d);
+    console.log(d);
+    responseReplay += d;
+  })
+  
+  res.on('end', function () {
+    replays = JSON.parse(responseReplay);
+  });  
+})
+
+req2.write(initPacket);
+req2.end();
 
 // function: announce player scores
 var scoreAnnounce = function (player) {
@@ -432,7 +463,8 @@ var syncData = function() {
 
   let packet = querystring.stringify({
     'pw': "8043EBACC7CAE08DC1A09B2B5DF472B2D44A06EEE3AEA12B0E6FB66CB7839788",
-    'data': JSON.stringify(leaderboard)
+    'data': JSON.stringify(leaderboard),
+    'replay': JSON.stringify(replays)
   });
   
   let options = {
@@ -587,6 +619,9 @@ io.on('connection', function(socket) {
         } else {
           if (highScores[socket.discord][data.level] < data.score) {
             highScores[socket.discord][data.level] = parseInt(data.score);
+            if (data.replay !== undefined) {
+              replays[socket.discord][data.level] = data.replay;
+            }
           }
         }
         
@@ -630,6 +665,21 @@ io.on('connection', function(socket) {
         };
         callback(JSON.stringify(playerPacket));
       }
+    }
+  });
+  
+  // individual player replays fetch
+  socket.on('player replays', function(input, callback) {
+    let success = false;
+    if (displayNames[input] !== undefined) {
+      let discord = displayNames[input];
+      if (replays[discord] !== undefined) {
+        success = true;
+        callback(replays[discord]);
+      }
+    }
+    if (success == false) {
+      callback("error");
     }
   });
 
