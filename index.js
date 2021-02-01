@@ -227,7 +227,7 @@ const optionsReplay = {
 };
 
 var responseReplay = "";
-const req2 = https.request(options, res => {
+const req2 = https.request(optionsReplay, res => {
   responseReplay = "";
 
   res.on('data', d => {
