@@ -660,8 +660,8 @@ io.on('connection', function(socket) {
     if (socket.auth) {
       if (displayNames[input] !== undefined) {
         let playerPacket = {
-          "Best": highScores[displayNames[input]],
-          "Attempts": levelAttempts[displayNames[input]]
+          "Best": JSON.stringify(highScores[displayNames[input]]),
+          "Attempts": JSON.stringify(levelAttempts[displayNames[input]])
         };
         callback(JSON.stringify(playerPacket));
       }
