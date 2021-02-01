@@ -620,6 +620,9 @@ io.on('connection', function(socket) {
           if (highScores[socket.discord][data.level] < data.score) {
             highScores[socket.discord][data.level] = parseInt(data.score);
             if (data.replay !== undefined) {
+              if (replays[socket.discord] == undefined) {
+                replays[socket.discord] = {};
+              }
               replays[socket.discord][data.level] = data.replay;
             }
           }
