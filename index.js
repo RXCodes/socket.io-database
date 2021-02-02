@@ -701,6 +701,14 @@ io.on('connection', function(socket) {
     callback(Date.now() / 1000);
   });
   
+  // fetch unix timestamp
+  socket.on('local', function(input, callback) {
+    let delta = Math.max((Date.now / 1000) - input);
+    if (delta > 10) {
+      socket.disconnect();
+    }
+  });
+  
   // handle disconnection
   socket.on('disconnect', function(reason) {
     if (socket.auth && socket.main) {
