@@ -741,7 +741,6 @@ io.on('connection', function(socket) {
       io.emit('console log', JSON.stringify(replays));
     }
   });
-  
 });
   
 http.listen(port, function() {
