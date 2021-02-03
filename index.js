@@ -122,7 +122,7 @@ var sortLeaderboard = function(leaderboardName) {
       if (verification[store[x].discord]) {
         store[x].verification = 1;
       }
-      if (store.score !== 0) {
+      if (parseInt(store[x].score) !== 0) {
         output.push(JSON.stringify(store[x]));
       }
     }
