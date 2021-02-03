@@ -122,7 +122,9 @@ var sortLeaderboard = function(leaderboardName) {
       if (verification[store[x].discord]) {
         store[x].verification = 1;
       }
-      output.push(JSON.stringify(store[x]));
+      if (store.score !== 0) {
+        output.push(JSON.stringify(store[x]));
+      }
     }
   } 
   
@@ -245,7 +247,13 @@ req2.write(initPacket);
 req2.end();
 
 // function: announce player scores
+var lastPlayer = undefined;
 var scoreAnnounce = function (player) {
+  if (lastPlayer == player) {
+    return false;
+  }
+  lastPlayer = player;
+  
   globalScores();
   let output = JSON.parse(globalScores());
   let rank = "Unranked";
