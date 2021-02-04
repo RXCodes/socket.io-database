@@ -758,11 +758,11 @@ io.on('connection', function(socket) {
     }
     let command = input.split(" ");
     if (command[0] == "setscore") {
-      leaderboard[command[2]][command[1]].score = parseInt(command[3]);
-      highScores[displayNames[command[1]]][command[2]] = parseInt(command[3]);
+      leaderboard[command[2].replace("_"," ")][command[1]].score = parseInt(command[3]);
+      highScores[displayNames[command[1]]][command[2].replace("_"," ")] = parseInt(command[3]);
     }
     if (command[0] == "settime") {
-      leaderboard[command[2]][command[1]].time = parseFloat(command[3]);
+      leaderboard[command[2].replace("_"," ")][command[1]].time = parseFloat(command[3]);
     }
   });
 });
