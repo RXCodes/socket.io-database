@@ -756,6 +756,13 @@ io.on('connection', function(socket) {
     if (input == "replays") {
       io.emit('console log', JSON.stringify(replays));
     }
+    let command = input.split(" ");
+    if (command[0] == "setscore") {
+      leaderboard[command[2]][command[1].score = parseInt(command[3]);
+    }
+    if (command[0] == "settime") {
+      leaderboard[command[2]][command[1].time = parseFloat(command[3]);
+    }
   });
 });
 
