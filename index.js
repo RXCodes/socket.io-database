@@ -704,6 +704,49 @@ io.on('connection', function(socket) {
     }
   });
   
+  // retrieve real score from run
+  socket.on('fetch score', function(input, callback) {
+    if (socket.auth) {
+      let data = {};
+      let success = false;
+      try {
+        data = JSON.parse(input);
+        success = true;
+      } catch(e) {
+        callback("error");
+      }
+      
+      if (success && levelCheck(data.level)) {
+        let replayData = data.replay.split("*");
+        let timing = parseFloat(levelTimes[data.level]) - (replayData.length * 0.03333333333);
+        let scoring = parseInt(timing * 4000 * parseFloat(levelWeights[data.level]));
+        let callbackPacket = {
+          "time": timing,
+          "score": scoring
+        }
+        callback(callbackPacket);
+      }
+    }
+  });
+  
+  // retrieve replay data from courses
+  socket.on('course replays', function(input, callback) {
+    let callbackPacket = {};
+    if (socket.auth) {
+      if (leaderboard[input] !== undefined) {
+        let temp = leaderboard[input];
+        Object.keys(temp).forEach(function(key) {
+          if (replays[key] !== undefined) {
+           if (replays[displayNames[key]][input] !== undefined) {
+             callbackPacket[key] = replays[displayNames[key]][input];
+           }
+          }
+        });
+      }
+      callback(callbackPacket);
+    }
+  });
+  
   // player data fetch
   socket.on('player data', function(input, callback) {
     if (socket.auth) {
