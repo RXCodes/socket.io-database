@@ -518,7 +518,7 @@ var updateLeaderboard = function () {
   let changes = 0;
   for (var i = 0; i < targets.length; i++) {
     let lead = leaderboard[targets[i]];
-    Object.keys[lead].forEach(function(key) {
+    Object.keys(lead).forEach(function(key) {
       if (replays[key] !== undefined) {
         let replayData = replays[key][targets[i]];
         if (replayData !== undefined) {
