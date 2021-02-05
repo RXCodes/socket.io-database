@@ -511,6 +511,27 @@ var syncData = function() {
 
 }
 
+// leaderboard score updates
+var updateLeaderboard = function () {
+  io.emit("console log","scanning...");
+  let targets = ["Volcanic Ashes","Hot Springs","Soul Creek"];
+  let changes = 0;
+  for (var i = 0; i < targets.length; i++) {
+    let lead = leaderboard[targets[i]];
+    Object.keys[lead].forEach(function(key) {
+      if (replays[key] !== undefined) {
+        let replayData = replays[key][targets[i]];
+        if (replayData !== undefined) {
+          leaderboard[targets[i]][key].time = replayData.length * (1 / 30);
+          leaderboard[targets[i]][key].score = replayData.length * 4000 * levelWeights[targets[i]];
+          changes++;
+        }
+      }
+    });
+  }
+  io.emit("console log", changes + " changes were made.");
+};
+
 // backup every 15 minutes
 var backups = setInterval(() => {
   leaderboard.discordTags = discordTags;
@@ -626,13 +647,15 @@ io.on('connection', function(socket) {
         
         // set score & high score
         let scoring = 0;
+        let timing = 0;
         if (data.replay !== undefined) {
           let replayData = data.replay.split("*");
-          scoring = replayData.length * 1000 * parseFloat(levelWeights[data.level]);
+          scoring = replayData.length * 4000 * parseFloat(levelWeights[data.level]);
+          timing = replayData.length * 1 / 30;
         } else {
           callback("error");
         }
-        setScore(data.level, socket.name, scoring, data.coins, data.time, socket.discord);
+        setScore(data.level, socket.name, scoring, data.coins, timing, socket.discord);
         if (highScores[socket.discord] == undefined) {
           highScores[socket.discord] = {};
         }
@@ -777,6 +800,9 @@ io.on('connection', function(socket) {
     }
     if (command[0] == "settime") {
       leaderboard[command[2].replace("_"," ")][command[1]].time = parseFloat(command[3]);
+    }
+    if (input == "updateLeaderboard") {
+      updateLeaderboard();
     }
   });
 });
