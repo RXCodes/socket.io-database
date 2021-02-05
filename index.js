@@ -660,7 +660,7 @@ io.on('connection', function(socket) {
         // set score & high score
         let scoring = 0;
         let timing = 0;
-        if (data.replay !== undefined) {
+        if (data.replay !== undefined && parseInt(data.score) > 100) {
           let replayData = data.replay.split("*");
           timing = parseFloat(levelTimes[data.level]) - (replayData.length * 0.03333333333);
           scoring = parseInt(timing * 4000 * parseFloat(levelWeights[data.level]));
