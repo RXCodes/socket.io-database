@@ -520,7 +520,7 @@ var syncData = function() {
 // leaderboard score updates
 var updateLeaderboard = function () {
   io.emit("console log","scanning...");
-  let targets = ["Volcanic Ashes","Hot Springs","Soul Creek"];
+  let targets = ["Volcanic Ashes","Hot Springs","Soul Creek","Doom Mountain"];
   let changes = 0;
   let iterations = 0;
   for (var i = 0; i < targets.length; i++) {
@@ -672,10 +672,10 @@ io.on('connection', function(socket) {
           highScores[socket.discord] = {};
         }
         if (highScores[socket.discord][data.level] == undefined) {
-          highScores[socket.discord][data.level] = parseInt(data.score);
+          highScores[socket.discord][data.level] = parseInt(scoring);
         } else {
-          if (highScores[socket.discord][data.level] < data.score) {
-            highScores[socket.discord][data.level] = parseInt(data.score);
+          if (highScores[socket.discord][data.level] < scoring) {
+            highScores[socket.discord][data.level] = parseInt(scoring);
             if (data.replay !== undefined) {
               if (replays[socket.discord] == undefined) {
                 replays[socket.discord] = {};
