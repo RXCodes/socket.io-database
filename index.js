@@ -529,10 +529,10 @@ var updateLeaderboard = function () {
       iterations++;
       let discord = displayNames[key];
       if (replays[discord] !== undefined) {
-        let replayData = replays[discord][targets[i]];
+        let replayData = replays[discord][targets[i]].split("*");
         if (replayData !== undefined) {
-          leaderboard[targets[i]][key].time = levelTimes[targets[i]] - replayData.length * (1 / 30);
-          leaderboard[targets[i]][key].score = (levelTimes[targets[i]] - replayData.length * (1 / 30)) * 4000 * levelWeights[targets[i]];
+          leaderboard[targets[i]][key].time = levelTimes[targets[i]] - (replayData.length * 0.033333333);
+          leaderboard[targets[i]][key].score = (levelTimes[targets[i]] - (replayData.length * 0.033333333)) * 4000 * levelWeights[targets[i]];
           changes++;
         }
       }
@@ -660,7 +660,7 @@ io.on('connection', function(socket) {
         let timing = 0;
         if (data.replay !== undefined) {
           let replayData = data.replay.split("*");
-          timing = parseFloat(levelTimes[data.level]) - (replayData.length * 1 / 30);
+          timing = parseFloat(levelTimes[data.level]) - (replayData.length * 0.03333333333);
           scoring = timing * 4000 * parseFloat(levelWeights[data.level]);
         } else {
           callback("error");
