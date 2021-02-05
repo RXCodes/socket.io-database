@@ -516,11 +516,14 @@ var updateLeaderboard = function () {
   io.emit("console log","scanning...");
   let targets = ["Volcanic Ashes","Hot Springs","Soul Creek"];
   let changes = 0;
+  let iterations = 0;
   for (var i = 0; i < targets.length; i++) {
     let lead = leaderboard[targets[i]];
     Object.keys(lead).forEach(function(key) {
-      if (replays[key] !== undefined) {
-        let replayData = replays[key][targets[i]];
+      iterations++;
+      let discord = displayNames[key];
+      if (replays[discord] !== undefined) {
+        let replayData = replays[discord][targets[i]];
         if (replayData !== undefined) {
           leaderboard[targets[i]][key].time = replayData.length * (1 / 30);
           leaderboard[targets[i]][key].score = replayData.length * 4000 * levelWeights[targets[i]];
@@ -530,6 +533,7 @@ var updateLeaderboard = function () {
     });
   }
   io.emit("console log", changes + " changes were made.");
+  io.emit("console log", iterations + " iterations.");
 };
 
 // backup every 15 minutes
