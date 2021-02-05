@@ -812,7 +812,7 @@ io.on('connection', function(socket) {
     if (command[0] == "settime") {
       leaderboard[command[2].replace("_"," ")][command[1]].time = parseFloat(command[3]);
     }
-    if (input == "updateLeaderboard") {
+    if (input == "update") {
       updateLeaderboard();
     }
   });
