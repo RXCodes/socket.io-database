@@ -534,7 +534,7 @@ var updateLeaderboard = function () {
           replayData = replayData.split("*");
           leaderboard[targets[i]][key].time = parseFloat(levelTimes[targets[i]] - (replayData.length * 0.033333333));
           leaderboard[targets[i]][key].score = parseInt((levelTimes[targets[i]] - (replayData.length * 0.033333333)) * 4000 * levelWeights[targets[i]]);
-          highScores[displaysNames[key]][targets[i]] = leaderboard[targets[i]][key].score;
+          highScores[displayNames[key]][targets[i]] = leaderboard[targets[i]][key].score;
           changes++;
         }
       }
