@@ -9,6 +9,13 @@ app.get('/', function(req, res){
 const https = require('https');
 const querystring = require('querystring');
 
+var levelWeights = {
+  "Hot Springs": 1,
+  "Volcanic Ashes": 1,
+  "Soul Creek": 4,
+  "Doom Mountain": 4
+};
+
 // initialize variables
 var leaderboard = {};
 var discordTags = {};
@@ -618,7 +625,14 @@ io.on('connection', function(socket) {
         io.emit("attempt", world.runs);
         
         // set score & high score
-        setScore(data.level, socket.name, data.score, data.coins, data.time, socket.discord);
+        let scoring = 0;
+        if (data.replay !== undefined) {
+          let replayData = data.replay.split("*");
+          scoring = replayData.length * 1000 * parseFloat(levelWeights[data.level]);
+        } else {
+          callback("error");
+        }
+        setScore(data.level, socket.name, scoring, data.coins, data.time, socket.discord);
         if (highScores[socket.discord] == undefined) {
           highScores[socket.discord] = {};
         }
