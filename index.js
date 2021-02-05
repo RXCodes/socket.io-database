@@ -529,8 +529,7 @@ var updateLeaderboard = function () {
       iterations++;
       let discord = displayNames[key];
       if (replays[discord] !== undefined) {
-        let replayData = JSON.stringify(replays[discord][targets[i]]);
-        replayData = replayData.split("*");
+        let replayData = JSON.parse(replays[discord][targets[i]]).split("*");
         if (replayData !== undefined) {
           leaderboard[targets[i]][key].time = levelTimes[targets[i]] - (replayData.length * 0.033333333);
           leaderboard[targets[i]][key].score = (levelTimes[targets[i]] - (replayData.length * 0.033333333)) * 4000 * levelWeights[targets[i]];
