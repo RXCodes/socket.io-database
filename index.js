@@ -15,6 +15,12 @@ var levelWeights = {
   "Soul Creek": 4,
   "Doom Mountain": 4
 };
+var levelTimes = {
+  "Hot Springs": 120,
+  "Volcanic Ashes": 120,
+  "Soul Creek": 105,
+  "Doom Mountain": 105
+};
 
 // initialize variables
 var leaderboard = {};
@@ -525,8 +531,8 @@ var updateLeaderboard = function () {
       if (replays[discord] !== undefined) {
         let replayData = replays[discord][targets[i]];
         if (replayData !== undefined) {
-          leaderboard[targets[i]][key].time = replayData.length * (1 / 30);
-          leaderboard[targets[i]][key].score = replayData.length * 4000 * levelWeights[targets[i]];
+          leaderboard[targets[i]][key].time = levelTimes[targets[i]] - replayData.length * (1 / 30);
+          leaderboard[targets[i]][key].score = (levelTimes[targets[i]] - replayData.length * (1 / 30)) * 4000 * levelWeights[targets[i]];
           changes++;
         }
       }
@@ -654,8 +660,8 @@ io.on('connection', function(socket) {
         let timing = 0;
         if (data.replay !== undefined) {
           let replayData = data.replay.split("*");
-          scoring = replayData.length * 4000 * parseFloat(levelWeights[data.level]) * 1 / 30;
-          timing = replayData.length * 1 / 30;
+          timing = parseFloat(levelTimes[data.level]) - (replayData.length * 1 / 30);
+          scoring = timing * 4000 * parseFloat(levelWeights[data.level]);
         } else {
           callback("error");
         }
