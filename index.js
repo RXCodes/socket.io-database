@@ -529,7 +529,7 @@ var updateLeaderboard = function () {
       iterations++;
       let discord = displayNames[key];
       if (replays[discord] !== undefined) {
-        let replayData = replays[discord][targets[i]];
+        let replayData = JSON.stringify(replays[discord][targets[i]]);
         replayData = replayData.split("*");
         if (replayData !== undefined) {
           leaderboard[targets[i]][key].time = levelTimes[targets[i]] - (replayData.length * 0.033333333);
