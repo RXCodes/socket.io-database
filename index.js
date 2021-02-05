@@ -654,7 +654,7 @@ io.on('connection', function(socket) {
         let timing = 0;
         if (data.replay !== undefined) {
           let replayData = data.replay.split("*");
-          scoring = replayData.length * 4000 * parseFloat(levelWeights[data.level]);
+          scoring = replayData.length * 4000 * parseFloat(levelWeights[data.level]) * 1 / 30;
           timing = replayData.length * 1 / 30;
         } else {
           callback("error");
