@@ -735,7 +735,7 @@ io.on('connection', function(socket) {
     if (leaderboard[input] !== undefined) {
       let temp = leaderboard[input];
       Object.keys(temp).forEach(function(key) {
-        if (replays[key] !== undefined) {
+        if (replays[displayNames[key]] !== undefined) {
           if (replays[displayNames[key]][input] !== undefined) {
             callbackPacket[key] = replays[displayNames[key]][input];
           }
