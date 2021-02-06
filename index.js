@@ -731,20 +731,18 @@ io.on('connection', function(socket) {
   
   // retrieve replay data from courses
   socket.on('course replays', function(input, callback) {
-    let callbackPacket = {};
-    if (socket.auth) {
-      if (leaderboard[input] !== undefined) {
-        let temp = leaderboard[input];
-        Object.keys(temp).forEach(function(key) {
-          if (replays[key] !== undefined) {
-           if (replays[displayNames[key]][input] !== undefined) {
-             callbackPacket[key] = replays[displayNames[key]][input];
-           }
+  let callbackPacket = {};
+    if (leaderboard[input] !== undefined) {
+      let temp = leaderboard[input];
+      Object.keys(temp).forEach(function(key) {
+        if (replays[key] !== undefined) {
+          if (replays[displayNames[key]][input] !== undefined) {
+            callbackPacket[key] = replays[displayNames[key]][input];
           }
-        });
-      }
-      callback(callbackPacket);
+        }
+      });   
     }
+    callback(callbackPacket);
   });
   
   // player data fetch
