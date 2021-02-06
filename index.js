@@ -742,7 +742,7 @@ io.on('connection', function(socket) {
         }
       });   
     }
-    callback(callbackPacket);
+  callback(JSON.stringify(callbackPacket));
   });
   
   // player data fetch
