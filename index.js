@@ -13,13 +13,17 @@ var levelWeights = {
   "Hot Springs": 1,
   "Volcanic Ashes": 1,
   "Soul Creek": 4,
-  "Doom Mountain": 4
+  "Doom Mountain": 4,
+  "Twisted Towers": 6.5,
+  "Deception": 7
 };
 var levelTimes = {
   "Hot Springs": 120,
   "Volcanic Ashes": 120,
   "Soul Creek": 105,
-  "Doom Mountain": 105
+  "Doom Mountain": 105,
+  "Twisted Towers": 85,
+  "Deception": 85
 };
 
 // initialize variables
