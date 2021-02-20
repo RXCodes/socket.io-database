@@ -846,6 +846,15 @@ io.on('connection', function(socket) {
         }
       });
       io.emit('console log', output);
+      io.emit('console log', "Verified users:");
+      output = "";
+      Object.keys(discordTags).forEach(function(key) {
+        if (verification[key] !== undefined) {
+          output += key;
+          output += "\n";
+        }
+      });
+      io.emit('console log', output);
     }
     if (input == "replays") {
       io.emit('console log', JSON.stringify(replays));
