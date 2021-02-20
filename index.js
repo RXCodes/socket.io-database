@@ -15,7 +15,7 @@ var levelWeights = {
   "Soul Creek": 4,
   "Doom Mountain": 4,
   "Twisted Towers": 6.5,
-  "Deception": 7
+  "Deception": 10
 };
 var levelTimes = {
   "Hot Springs": 120,
