@@ -870,6 +870,17 @@ io.on('connection', function(socket) {
     if (input == "update") {
       updateLeaderboard();
     }
+    if ("input" == "result") {
+      let output = JSON.parse(globalScores());
+      let coins = 0;
+      let time = 0;
+      for (var i = 0; i < output.length; i++) {
+      coins += JSON.parse(output[i]).coins;
+      time += JSON.parse(output[i]).time;
+      io.emit("console log","Coins: " + coins);
+      io.emit("console log","Time: " + time);
+      io.emit("console log","Contestants: " + output.length);
+    }
   });
 });
 
