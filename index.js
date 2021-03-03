@@ -882,6 +882,17 @@ io.on('connection', function(socket) {
       io.emit("console log","Time: " + time);
       io.emit("console log","Contestants: " + output.length);
     }
+    
+    if (input == "discord scores") {
+      let output = JSON.parse(globalScores());
+      (Object.keys(discordTags).forEach(function(key) {
+        if (verification[key] !== undefined) {
+          let score = JSON.parse(output[key]).score;
+          io.emit("console log", key + " => " + score)
+        }
+      });
+     
+    }
   });
 });
 
