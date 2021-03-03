@@ -884,10 +884,10 @@ io.on('connection', function(socket) {
     }
     
     if (input == "discord scores") {
-      let output = JSON.parse(globalScores());
+      globalScores();
       Object.keys(discordTags).forEach(function(key) {
         if (verification[key] !== undefined) {
-          let score = JSON.parse(output[key]).score;
+          let score = highScores[key].global;
           io.emit("console log", key + " => " + score)
         }
       });
