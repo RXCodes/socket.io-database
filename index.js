@@ -875,12 +875,8 @@ io.on('connection', function(socket) {
       let coins = 0;
       let time = 0;
       for (var i = 0; i < output.length; i++) {
-        coins += JSON.parse(output[i]).coins;
-        time += JSON.parse(output[i]).time;
+        io.emit("console log",output[i] + ": " + JSON.parse(output[i]).score);
       }
-      io.emit("console log","Coins: " + coins);
-      io.emit("console log","Time: " + time);
-      io.emit("console log","Contestants: " + output.length);
     }
     
     if (input == "discord scores") {
