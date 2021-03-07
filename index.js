@@ -882,7 +882,7 @@ io.on('connection', function(socket) {
             if (data[displayNames[player]] == undefined) {
               data[displayNames[player]] = 0;
             }    
-            if (parseInt(leaderboard[key][displayNames[player]].score) > 1) {
+            if (parseInt(leaderboard[key][player].score) > 1) {
               data[displayNames[player]] = data[displayNames[player]] + 1;
             }
           }
