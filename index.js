@@ -875,7 +875,7 @@ io.on('connection', function(socket) {
       let coins = 0;
       let time = 0;
       for (var i = 0; i < output.length; i++) {
-        io.emit("console log",output[i] + ": " + JSON.parse(output[i]).score);
+        io.emit("console log",JSON.parse(output[i]).discord + ": " + JSON.parse(output[i]).score);
       }
     }
     
