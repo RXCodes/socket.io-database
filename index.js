@@ -891,9 +891,8 @@ io.on('connection', function(socket) {
           }
         });
         
-        io.emit("console log",player + " => " + data[player]);
-        
       });
+      io.emit("console log",data);
     }
     
     if (input == "discord scores") {
