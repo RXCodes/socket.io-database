@@ -871,12 +871,29 @@ io.on('connection', function(socket) {
       updateLeaderboard();
     }
     if (input == "result") {
-      let output = JSON.parse(globalScores());
-      let coins = 0;
-      let time = 0;
-      for (var i = 0; i < output.length; i++) {
-        io.emit("console log",JSON.parse(output[i]).discord + ": " + JSON.parse(output[i]).score);
-      }
+      let data = {};
+      Object.keys(leaderboard).forEach(function(key) {
+        Object.keys(leaderboard[key]).forEach(function(player) {
+          let playerOBJ = leaderboard[key][player];
+          if (playerOBJ.name !== undefined && playerOBJ.discord !== undefined) {
+            let currentScore = 0;
+            let coinAmount = 0;
+            let totalTime = 0;
+            if (data[player] !== undefined) {
+              data[player] = 0;
+              currentScore = parseInt(leaderboard["global"][player].score);
+              currentScore += parseInt(leaderboard[key][player].score);
+              coinAmount = parseInt(leaderboard["global"][player].coins);
+            }    
+            if (parseInt(leaderboard[key][player].score) > 1) {
+              data[player]++;
+            }
+          }
+        });
+        
+        io.emit("console log",player + " => " + data[player]);
+        
+      });
     }
     
     if (input == "discord scores") {
