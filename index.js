@@ -892,7 +892,7 @@ io.on('connection', function(socket) {
         });
         
       });
-      io.emit("console log",data);
+      io.emit("console log",JSON.stringify(data));
     }
     
     if (input == "discord scores") {
