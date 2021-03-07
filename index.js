@@ -879,14 +879,11 @@ io.on('connection', function(socket) {
             let currentScore = 0;
             let coinAmount = 0;
             let totalTime = 0;
-            if (data[player] !== undefined) {
+            if (data[player] == undefined) {
               data[player] = 0;
-              currentScore = parseInt(leaderboard["global"][player].score);
-              currentScore += parseInt(leaderboard[key][player].score);
-              coinAmount = parseInt(leaderboard["global"][player].coins);
             }    
             if (parseInt(leaderboard[key][player].score) > 1) {
-              data[player]++;
+              data[player] = data[player] + 1;
             }
           }
         });
